@@ -1,8 +1,8 @@
 {
-  "name": "vc2008vue",
+  "name": "geologicaldata",
   "version": "1.0.0",
-  "description": "A Vue.js visualization of Vast Challenge 2008",
-  "author": "rinziv <rinzivillo@isti.cnr.it>",
+  "description": "A Vue.js visualization geological CNR data",
+  "author": "tribuzio daniele>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -13,6 +13,9 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "bootstrap": "^4.3.1",
+    "bootstrap-vue": "^2.0.0-rc.18",
+    "crossfilter": "^1.3.12",
     "vue": "^2.5.2"
   },
   "devDependencies": {
