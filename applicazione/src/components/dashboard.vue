@@ -7,16 +7,18 @@
       </b-col>
       <b-col cols="3">
         <h2>informazioni del pozzo</h2>
-        <div style="height:250px; background-color: beige"></div>
+        <div style="height:250px; background-color: beige">
+          <informazioni measure="# Records" :value = "numRecords"></informazioni>
+        </div>
         <b-col>
           <div>
             <h4>Attributi</h4>
             <b-form-select v-model="uso.selected" :options="uso.options"></b-form-select>
-            <div class="mt-3">tipo di utilizzo: <strong>{{ selected }}</strong></div>
+            <div class="mt-3">tipo di utilizzo: <strong>{{ uso.selected }}</strong></div>
             <b-form-select v-model="selected" :options="options"></b-form-select>
             <div class="mt-3">tipo di utilizzo: <strong>{{ selected }}</strong></div>
-            <b-form-select v-model="selected" :options="options"></b-form-select>
-            <div class="mt-3">tipo di utilizzo: <strong>{{ selected }}</strong></div>
+            <b-form-select v-model="selected" :options="uso.options"></b-form-select>
+            <div class="mt-3">tipo di utilizzo: <strong>{{ uso.selected }}</strong></div>
           </div>
         </b-col>
       </b-col>
@@ -48,11 +50,12 @@
 
 <script>
 import crossfilter from 'crossfilter';
+import informazioni from './informazioni';
 
 // crossfilter data management
 let cf; // crossfilter instance
-let dnome;
-let dprof;
+// let dnome;
+// let dprof;
 let duso;
 // let dVesselType;
 
@@ -60,14 +63,15 @@ let duso;
 export default {
   name: 'dashboard',
   components: {
+    informazioni,
   },
   data() {
     return {
       uso: {
-        selected: '1',
-        options: ['1', '2', '3'],
-        reports: [],
+        selected: [],
+        options: [],
       },
+      numRecords: 0,
     };
   },
 
@@ -80,21 +84,34 @@ export default {
           prof: +d.prof,
           nome: d.nome,
         }));
+
         cf = crossfilter(this.reports);
+        // duso = cf.dimension(d => d.uso);
         duso = cf.dimension(d => d.uso);
-        dnome = cf.dimension(d => d.nome);
-        dprof = cf.dimension(d => d.prof);
-        duso.filter('AGROZOOTECNICO');
+        // dprof = cf.dimension(d => d.prof);
         /* eslint-disable */
-        console.log('uso agro', duso.group().reduceCount().all());
-        console.log('key', dnome.group().reduceCount().all());
-        console.log('recordType', dprof.group().reduceCount().all());
-        /* eslint-disable */
+
+        console.log('num reports', cf.groupAll().reduceCount().value());
+
         this.uso.options = duso.group().reduceCount().all().map(v => v.key);
-        this.uso.value = this.uso.options[0];
+        this.uso.selected = this.uso.options[0];
+        this.refreshCounters();
       });
   },
-
+  methods: {
+    refreshCounters() {
+      this.numRecords = cf.groupAll().reduceCount().value();
+    },
+  },
+  watch: {
+    uso: {
+      handler(newVal) {
+        duso.filter(newVal.selected);
+        this.refreshCounters();
+      },
+      deep: true, // force watching within properties
+    },
+  },
 };
 </script>
 
