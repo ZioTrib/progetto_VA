@@ -92,8 +92,8 @@ export default {
   data() {
     return {
       uso: {
-        selected: [],
-        options: [],
+        selected: 'TUTTI',
+        options: ['TUTTI'],
       },
       numRecords: 0,
     };
@@ -103,22 +103,21 @@ export default {
     fetch('static/data/pozzi.json')
       .then(res => res.json())
       .then((out) => {
-        this.reports = out.map(d => ({
+        const reports = out.map(d => ({
           uso: d.uso,
 
           prof: +d.prof,
           nome: d.nome,
         }));
 
-        cf = crossfilter(this.reports);
+        cf = crossfilter(reports);
         // duso = cf.dimension(d => d.uso);
         duso = cf.dimension(d => d.uso);
         // dprof = cf.dimension(d => d.prof);
-        /* eslint-disable */
 
-        console.log('num reports', cf.groupAll().reduceCount().value());
+        cf.groupAll().reduceCount().value();
 
-        this.uso.options = duso.group().reduceCount().all().map(v => v.key);
+        this.uso.options = ['TUTTI'].concat(duso.group().reduceCount().all().map(v => v.key));
         this.uso.selected = this.uso.options[0];
         this.refreshCounters();
       });
@@ -131,7 +130,11 @@ export default {
   watch: {
     uso: {
       handler(newVal) {
-        duso.filter(newVal.selected);
+        if (newVal.selected === 'TUTTI') {
+          duso.filter(null);
+        } else {
+          duso.filter(newVal.selected);
+        }
         this.refreshCounters();
       },
       deep: true, // force watching within properties
