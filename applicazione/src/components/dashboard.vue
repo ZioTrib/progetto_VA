@@ -13,12 +13,36 @@
         <b-col>
           <div>
             <h4>Attributi</h4>
-            <b-form-select v-model="uso.selected" :options="uso.options"></b-form-select>
-            <div class="mt-3">tipo di utilizzo: <strong>{{ uso.selected }}</strong></div>
-            <b-form-select v-model="selected" :options="options"></b-form-select>
-            <div class="mt-3">tipo di utilizzo: <strong>{{ selected }}</strong></div>
-            <b-form-select v-model="selected" :options="uso.options"></b-form-select>
-            <div class="mt-3">tipo di utilizzo: <strong>{{ uso.selected }}</strong></div>
+            <div>
+              <b-form-group label="Stacked (vertical) switch style checkboxes" class="text-left">
+                <b-form-checkbox-group
+                  v-model="uso.selected"
+                  :options="uso.options"
+                  switches
+                  stacked
+                ></b-form-checkbox-group>
+              </b-form-group>
+            </div>
+            <div>
+              <b-form-group label="Stacked (vertical) switch style checkboxes" class="text-left">
+                <b-form-checkbox-group
+                  v-model="uso.selected"
+                  :options="uso.options"
+                  switches
+                  stacked
+                ></b-form-checkbox-group>
+              </b-form-group>
+            </div>
+            <div>
+              <b-form-group label="Stacked (vertical) switch style checkboxes" class="text-left">
+                <b-form-checkbox-group
+                  v-model="uso.selected"
+                  :options="uso.options"
+                  switches
+                  stacked
+                ></b-form-checkbox-group>
+              </b-form-group>
+            </div>
           </div>
         </b-col>
       </b-col>
@@ -81,6 +105,7 @@ export default {
       .then((out) => {
         this.reports = out.map(d => ({
           uso: d.uso,
+
           prof: +d.prof,
           nome: d.nome,
         }));
