@@ -14,10 +14,30 @@
           <div>
             <h4>Attributi</h4>
             <div>
-              <b-form-group label="Stacked (vertical) switch style checkboxes" class="text-left">
+              <b-form-group label="" class="text-left">
                 <b-form-checkbox-group
                   v-model="uso.selected"
                   :options="uso.options"
+                  switches
+                  stacked
+                ></b-form-checkbox-group>
+              </b-form-group>
+            </div>
+            <div>
+              <b-form-group label="" class="text-left">
+                <b-form-checkbox-group
+                  v-model="scopo.selected"
+                  :options="scopo.options"
+                  switches
+                  stacked
+                ></b-form-checkbox-group>
+              </b-form-group>
+            </div>
+            <div>
+              <b-form-group label="" class="text-left">
+                <b-form-checkbox-group
+                  v-model="tipo.selected"
+                  :options="tipo.options"
                   switches
                   stacked
                 ></b-form-checkbox-group>
@@ -66,6 +86,8 @@ import chart from './chart';
 // crossfilter data management
 let cf; // crossfilter instance
 let duso;
+let dscopo;
+let dtipo;
 
 
 export default {
@@ -80,9 +102,18 @@ export default {
         selected: 'TUTTI',
         options: ['TUTTI'],
       },
+      scopo: {
+        selected: 'TUTTI',
+        options: ['TUTTI'],
+      },
+      tipo: {
+        selected: 'TUTTI',
+        options: ['TUTTI'],
+      },
       numRecords: 0,
       reports: [],
       pozzi: [],
+      gruppo: [],
     };
   },
 
@@ -92,16 +123,26 @@ export default {
       .then((out) => {
         this.reports = out.map(d => ({
           uso: d.uso,
+          tipo: d.tipo,
           prof: +d.prof,
           nome: d.nome,
+          quota: +d.quota,
+          scopo: d.scopo,
         }));
 
         cf = crossfilter(this.reports);
         duso = cf.dimension(d => d.uso);
+        dscopo = cf.dimension(d => d.scopo);
+        dtipo = cf.dimension(d => d.tipo);
 
         cf.groupAll().reduceCount().value();
+
         this.uso.options = ['TUTTI'].concat(duso.group().reduceCount().all().map(v => v.key));
         this.uso.selected = this.uso.options[0];
+        this.scopo.options = ['TUTTI'].concat(dscopo.group().reduceCount().all().map(v => v.key));
+        this.scopo.selected = this.scopo.options[0];
+        this.tipo.options = ['TUTTI'].concat(dtipo.group().reduceCount().all().map(v => v.key));
+        this.tipo.selected = this.tipo.options[0];
         this.refreshCounters();
         this.refreshCharts();
       });
@@ -111,8 +152,9 @@ export default {
       this.numRecords = cf.groupAll().reduceCount().value();
     },
     refreshCharts() {
-      /* eslint-disable */
-      this.pozzi = this.reports.map(v => ({ key: v.nome, value: +v.prof }));
+      this.gruppo = this.reports.filter(selected => selected.uso === this.uso.selected
+        && selected.scopo === this.scopo.selected && selected.tipo === this.tipo.selected);
+      this.pozzi = this.gruppo.map(v => ({ key: v.nome, value1: +v.prof, value2: +v.quota }));
     },
   },
   watch: {
@@ -122,6 +164,30 @@ export default {
           duso.filter(null);
         } else {
           duso.filter(newVal.selected);
+        }
+        this.refreshCounters();
+        this.refreshCharts();
+      },
+      deep: true, // force watching within properties
+    },
+    scopo: {
+      handler(newVal) {
+        if (newVal.selected === 'TUTTI') {
+          dscopo.filter(null);
+        } else {
+          dscopo.filter(newVal.selected);
+        }
+        this.refreshCounters();
+        this.refreshCharts();
+      },
+      deep: true, // force watching within properties
+    },
+    tipo: {
+      handler(newVal) {
+        if (newVal.selected === 'TUTTI') {
+          dtipo.filter(null);
+        } else {
+          dtipo.filter(newVal.selected);
         }
         this.refreshCounters();
         this.refreshCharts();
