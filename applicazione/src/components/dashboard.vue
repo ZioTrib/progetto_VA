@@ -3,59 +3,69 @@
     <b-row class="text-center">
       <b-col cols="9">
         <h2>Mappa dei pozzi in italia</h2>
-        <div style="height:500px; background-color: beige"></div>
+        <div style="height:400px; background-color: beige"></div>
       </b-col>
       <b-col cols="3">
         <h2>informazioni del pozzo</h2>
-        <div style="height:250px; background-color: beige">
+        <div style="height:100px; background-color: beige">
           <informazioni measure="# Records" :value = "numRecords"></informazioni>
         </div>
         <b-col>
           <div>
             <h4>Attributi</h4>
             <div>
-              <b-form-group label="" class="text-left">
-                <b-form-checkbox-group
-                  v-model="uso.selected"
-                  :options="uso.options"
-                  switches
-                  stacked
-                ></b-form-checkbox-group>
-              </b-form-group>
+              <b-form-select v-model="uso.selected" :options="uso.options"></b-form-select>
+              <div class="mt-3">Selected: <strong>{{ uso.selected }}</strong></div>
             </div>
             <div>
-              <b-form-group label="" class="text-left">
-                <b-form-checkbox-group
-                  v-model="scopo.selected"
-                  :options="scopo.options"
-                  switches
-                  stacked
-                ></b-form-checkbox-group>
-              </b-form-group>
+              <b-form-select v-model="scopo.selected" :options="scopo.options"></b-form-select>
+              <div class="mt-3">Selected: <strong>{{ scopo.selected }}</strong></div>
             </div>
             <div>
-              <b-form-group label="" class="text-left">
-                <b-form-checkbox-group
-                  v-model="tipo.selected"
-                  :options="tipo.options"
-                  switches
-                  stacked
-                ></b-form-checkbox-group>
-              </b-form-group>
-            </div>
-            <div>
-            </div>
-            <div>
+              <b-form-select v-model="tipo.selected" :options="tipo.options"></b-form-select>
+              <div class="mt-3">Selected: <strong>{{ tipo.selected }}</strong></div>
             </div>
           </div>
         </b-col>
       </b-col>
     </b-row>
-
     <b-row class="text-center">
       <b-col>
+        <h3> elenco pozzi </h3>
+        <div>
+          <b-form-group label="Selection mode:" label-cols-md="4">
+            <b-form-select v-model="selectMode" :options="modes" class="mb-3"></b-form-select>
+          </b-form-group>
+          <b-table
+            ref="selectableTable"
+            selectable
+            :select-mode="selectMode"
+            :items="gruppo"
+            :fields="fields"
+            @row-selected="onRowSelected"
+            responsive="sm"
+          >
+            <!-- Example scoped slot for select state illustrative purposes -->
+            <template v-slot:cell(selected)="{ rowSelected }">
+              <template v-if="rowSelected">
+                <span aria-hidden="true">&check;</span>
+                <span class="sr-only">Selected</span>
+              </template>
+              <template v-else>
+                <span aria-hidden="true">&nbsp;</span>
+                <span class="sr-only">Not selected</span>
+              </template>
+            </template>
+          </b-table>
+          <p>
+            Selected Rows:<br>
+            {{ selected }}
+          </p>
+        </div>
+      </b-col>
+      <b-col>
         <h3> quota e profondità pozzi </h3>
-        <div style="height:600px; background-color: beige">
+        <div style="height:500px; background-color: beige">
         <chart :cfAggregation="pozzi"></chart>
         </div>
       </b-col>
@@ -110,6 +120,10 @@ export default {
         selected: 'TUTTI',
         options: ['TUTTI'],
       },
+      selected: [],
+      modes: ['multi', 'single'],
+      fields: ['nome', 'prof', 'quota'],
+      selectMode: 'multi',
       numRecords: 0,
       reports: [],
       pozzi: [],
@@ -152,9 +166,15 @@ export default {
       this.numRecords = cf.groupAll().reduceCount().value();
     },
     refreshCharts() {
-      this.gruppo = this.reports.filter(selected => selected.uso === this.uso.selected
-        && selected.scopo === this.scopo.selected && selected.tipo === this.tipo.selected);
-      this.pozzi = this.gruppo.map(v => ({ key: v.nome, value1: +v.prof, value2: +v.quota }));
+      this.gruppo = this.reports.filter(selected =>
+        selected.uso === this.uso.selected &&
+        selected.scopo === this.scopo.selected &&
+        selected.tipo === this.tipo.selected);
+    },
+
+    onRowSelected(items) {
+      this.selected = items;
+      this.pozzi = this.selected.map(v => ({ key: v.nome, value1: +v.prof, value2: +v.quota }));
     },
   },
   watch: {

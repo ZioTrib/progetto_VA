@@ -1,5 +1,5 @@
 <template>
-    <vue-plotly :data="data" :layout="layout" :options="options"/>
+    <vue-plotly :data="data" :layout="layout" :options="options" :config ="config"/>
 </template>
 
 <script>
@@ -19,22 +19,27 @@ export default {
       y: [1, 4, 9, 16],
       name: 'profondità',
       type: 'bar',
+
     };
     const trace2 = {
       x: [1, 2, 3, 4],
       y: [6, -8, -4.5, 8],
       name: 'quota',
       type: 'bar',
+
     };
     return {
       data: [trace1, trace2],
       layout: {
-        width: 1200,
         heigth: 600,
         barmode: 'relative',
+        dragmode: 'pan',
+        scrollZoom: true,
         xaxis: {
           type: 'category',
         },
+      },
+      config: {
       },
       options: {
       },
