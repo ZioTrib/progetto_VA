@@ -127,7 +127,7 @@ export default {
       },
       selected: [],
       modes: ['multi', 'single'],
-      fields: ['nome', 'prof', 'quota', 'lat', 'lon'],
+      fields: ['nome', 'prof', 'quota'],
       selectMode: 'multi',
       numRecords: 0,
       reports: [],
@@ -148,8 +148,8 @@ export default {
           nome: d.nome,
           quota: +d.quota,
           scopo: d.scopo,
-          lat: d.lat,
-          lon: d.lon,
+          lon_wgs84: d.lon_wgs84,
+          lat_wgs84: d.lat_wgs84,
         }));
         cf = crossfilter(this.reports);
         duso = cf.dimension(d => d.uso);
@@ -182,12 +182,17 @@ export default {
           selected.scopo === this.scopo.selected &&
           selected.tipo === this.tipo.selected);
       }
+      this.coordinate = this.gruppo.map(v => ({
+        lon: v.lon_wgs84,
+        lat: v.lat_wgs84,
+        name: v.nome,
+        prof: +v.prof,
+      }));
     },
 
     onRowSelected(items) {
       this.selected = items;
       this.pozzi = this.selected.map(v => ({ key: v.nome, value1: +v.prof, value2: +v.quota }));
-      this.coordinate = this.gruppo.map(v => ({ lat: +v.lat, lon: +v.lon }));
     },
   },
   watch: {

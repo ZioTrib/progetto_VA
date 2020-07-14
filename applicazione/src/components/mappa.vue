@@ -5,6 +5,7 @@
 <script>
 import VuePlotly from '@statnett/vue-plotly';
 
+
 export default {
   name: 'chart',
   components: {
@@ -15,47 +16,41 @@ export default {
   },
 
   data() {
-    const scl =
-      [[0, 'rgb(5, 10, 172)'],
-        [0.35, 'rgb(40, 60, 190)'],
-        [0.5, 'rgb(70, 100, 245)'],
-        [0.6, 'rgb(90, 120, 245)'],
-        [0.7, 'rgb(106, 137, 247)'],
-        [1, 'rgb(220, 220, 220)']];
+    const scl = [
+      [0, 'rgb(150,0,90)'],
+      [0.125, 'rgb(0, 0, 200)'],
+      [0.25, 'rgb(0, 25, 255)'],
+      [0.375, 'rgb(0, 152, 255)'],
+      [0.5, 'rgb(44, 255, 150)'],
+      [0.625, 'rgb(151, 255, 0)'],
+      [0.75, 'rgb(255, 234, 0)'],
+      [0.875, 'rgb(255, 111, 0)'],
+      [1, 'rgb(255, 0, 0)']];
     return {
-      data: [{
-        type: 'scattermapbox',
-        lon: [],
-        lat: [],
-        hoverinfor: [],
-        text: [],
-        mode: 'markers',
-        marker: {
-          size: 8,
-          opacity: 0.8,
-          reversescale: true,
-          autocolorscale: false,
-          symbol: 'square',
-          line: {
-            width: 1,
-            color: 'rgb(102,102,102)',
+      data: [
+        {
+          type: 'scattermapbox',
+          text: [],
+          lon: [],
+          lat: [],
+          marker: {
+            color: [],
+            size: 8,
+            colorscale: scl,
+            cmin: 0,
+            cmax: 2000,
+            reversescale: true,
+            opacity: 0.7,
           },
-          colorscale: scl,
-          cmin: 0,
-          color: [],
           colorbar: {
-            title: 'Incoming Flights February 2011',
           },
         },
-      }],
+      ],
       layout: {
-        title: 'Most Trafficked US airports',
-        colorbar: true,
         dragmode: 'zoom',
-        // eslint-disable-next-line max-len
-        // "open-street-map", "carto-positron", "carto-darkmatter", "stamen-terrain", "stamen-toner" or "stamen-watercolor"
         mapbox: { style: 'stamen-terrain', center: { lat: 43, lon: 10 }, zoom: 4 },
         margin: { r: 0, t: 0, b: 0, l: 0 },
+        colorbar: true,
       },
     };
   },
@@ -63,6 +58,8 @@ export default {
     coordinate(datum) {
       this.data[0].lon = datum.map(d => d.lon);
       this.data[0].lat = datum.map(d => d.lat);
+      this.data[0].text = datum.map(d => d.name);
+      this.data[0].marker.color = datum.map(d => d.prof);
     },
   },
 };

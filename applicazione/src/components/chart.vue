@@ -15,15 +15,15 @@ export default {
   },
   data() {
     const trace1 = {
-      x: [1, 2, 3, 4],
-      y: [1, 4, 9, 16],
+      x: [],
+      y: [],
       name: 'profondità',
       type: 'bar',
 
     };
     const trace2 = {
-      x: [1, 2, 3, 4],
-      y: [6, -8, -4.5, 8],
+      x: [],
+      y: [],
       name: 'quota',
       type: 'bar',
 
