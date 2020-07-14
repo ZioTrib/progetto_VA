@@ -4,14 +4,14 @@
 
 <script>
 import VuePlotly from '@statnett/vue-plotly';
-
+//  TODO: le quote negative devono partire da 0
 export default {
   name: 'chart',
   components: {
     VuePlotly,
   },
   props: {
-    cfAggregation: Array,
+    Aggregation: Array,
   },
   data() {
     const trace1 = {
@@ -46,7 +46,7 @@ export default {
     };
   },
   watch: {
-    cfAggregation(datum) {
+    Aggregation(datum) {
       this.data[0].y = datum.map(d => d.value1 * -1);
       this.data[0].x = datum.map(d => d.key);
       this.data[1].y = datum.map(d => d.value2);

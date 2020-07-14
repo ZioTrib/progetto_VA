@@ -3,7 +3,9 @@
     <b-row class="text-center">
       <b-col cols="9">
         <h2>Mappa dei pozzi in italia</h2>
-        <div style="height:400px; background-color: beige"></div>
+        <div style="height:500px; background-color: beige">
+          <mappa :coordinate="coordinate"></mappa>
+        </div>
       </b-col>
       <b-col cols="3">
         <h2>informazioni del pozzo</h2>
@@ -36,6 +38,7 @@
           <b-form-group label="Selection mode:" label-cols-md="4">
             <b-form-select v-model="selectMode" :options="modes" class="mb-3"></b-form-select>
           </b-form-group>
+<!--           TODO: implementare lo scrolling della tabello (o pagination) -->
           <b-table
             ref="selectableTable"
             selectable
@@ -66,7 +69,7 @@
       <b-col>
         <h3> quota e profondità pozzi </h3>
         <div style="height:500px; background-color: beige">
-        <chart :cfAggregation="pozzi"></chart>
+        <chart :Aggregation="pozzi"></chart>
         </div>
       </b-col>
     </b-row>
@@ -92,6 +95,7 @@
 import crossfilter from 'crossfilter';
 import informazioni from './informazioni';
 import chart from './chart';
+import mappa from './mappa';
 
 // crossfilter data management
 let cf; // crossfilter instance
@@ -105,6 +109,7 @@ export default {
   components: {
     informazioni,
     chart,
+    mappa,
   },
   data() {
     return {
@@ -122,12 +127,13 @@ export default {
       },
       selected: [],
       modes: ['multi', 'single'],
-      fields: ['nome', 'prof', 'quota'],
+      fields: ['nome', 'prof', 'quota', 'lat', 'lon'],
       selectMode: 'multi',
       numRecords: 0,
       reports: [],
       pozzi: [],
       gruppo: [],
+      coordinate: [],
     };
   },
 
@@ -142,8 +148,9 @@ export default {
           nome: d.nome,
           quota: +d.quota,
           scopo: d.scopo,
+          lat: d.lat,
+          lon: d.lon,
         }));
-
         cf = crossfilter(this.reports);
         duso = cf.dimension(d => d.uso);
         dscopo = cf.dimension(d => d.scopo);
@@ -158,23 +165,29 @@ export default {
         this.tipo.options = ['TUTTI'].concat(dtipo.group().reduceCount().all().map(v => v.key));
         this.tipo.selected = this.tipo.options[0];
         this.refreshCounters();
-        this.refreshCharts();
+        this.refreshTable();
       });
   },
   methods: {
     refreshCounters() {
       this.numRecords = cf.groupAll().reduceCount().value();
     },
-    refreshCharts() {
-      this.gruppo = this.reports.filter(selected =>
-        selected.uso === this.uso.selected &&
-        selected.scopo === this.scopo.selected &&
-        selected.tipo === this.tipo.selected);
+    // TODO: implementare selezione per valore == 'TUTTI'
+    refreshTable() {
+      if (this.uso.selected === 'TUTTI' && this.scopo.selected === 'TUTTI' && this.tipo.selected === 'TUTTI') {
+        this.gruppo = this.reports;
+      } else {
+        this.gruppo = this.reports.filter(selected =>
+          selected.uso === this.uso.selected &&
+          selected.scopo === this.scopo.selected &&
+          selected.tipo === this.tipo.selected);
+      }
     },
 
     onRowSelected(items) {
       this.selected = items;
       this.pozzi = this.selected.map(v => ({ key: v.nome, value1: +v.prof, value2: +v.quota }));
+      this.coordinate = this.gruppo.map(v => ({ lat: +v.lat, lon: +v.lon }));
     },
   },
   watch: {
@@ -186,7 +199,7 @@ export default {
           duso.filter(newVal.selected);
         }
         this.refreshCounters();
-        this.refreshCharts();
+        this.refreshTable();
       },
       deep: true, // force watching within properties
     },
@@ -198,7 +211,7 @@ export default {
           dscopo.filter(newVal.selected);
         }
         this.refreshCounters();
-        this.refreshCharts();
+        this.refreshTable();
       },
       deep: true, // force watching within properties
     },
@@ -210,7 +223,7 @@ export default {
           dtipo.filter(newVal.selected);
         }
         this.refreshCounters();
-        this.refreshCharts();
+        this.refreshTable();
       },
       deep: true, // force watching within properties
     },
