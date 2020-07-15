@@ -1,5 +1,5 @@
 <template>
-  <vue-plotly :data="data" :layout="layout"/>
+  <vue-plotly @hover="hover"  :data="data" :layout="layout" :config="config"/>
 </template>
 
 <script>
@@ -38,20 +38,21 @@ export default {
             size: 8,
             colorscale: scl,
             cmin: 0,
-            cmax: 2000,
-            reversescale: true,
+            reversescale: false,
             opacity: 0.7,
-          },
-          colorbar: {
+            colorbar: {
+              ticksuffix: ' metri',
+            },
           },
         },
       ],
       layout: {
+        colorbar: true,
         dragmode: 'zoom',
         mapbox: { style: 'stamen-terrain', center: { lat: 43, lon: 10 }, zoom: 4 },
         margin: { r: 0, t: 0, b: 0, l: 0 },
-        colorbar: true,
       },
+      config: { responsive: true },
     };
   },
   watch: {

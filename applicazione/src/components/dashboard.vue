@@ -185,7 +185,7 @@ export default {
       this.coordinate = this.gruppo.map(v => ({
         lon: v.lon_wgs84,
         lat: v.lat_wgs84,
-        name: v.nome,
+        name: [v.nome, v.scopo, v.uso, v.tipo],
         prof: +v.prof,
       }));
     },
