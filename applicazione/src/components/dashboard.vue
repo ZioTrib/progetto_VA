@@ -38,13 +38,35 @@
           <b-form-group label="Selection mode:" label-cols-md="4">
             <b-form-select v-model="selectMode" :options="modes" class="mb-3"></b-form-select>
           </b-form-group>
-<!--           TODO: implementare lo scrolling della tabello (o pagination) -->
+          <b-form-group
+            label="Filter"
+            label-cols-sm="3"
+            label-align-sm="right"
+            label-size="sm"
+            label-for="filterInput"
+            class="mb-0"
+          >
+            <b-input-group size="sm">
+              <b-form-input
+                v-model="filter"
+                type="search"
+                id="filterInput"
+                placeholder="Type to Search"
+              ></b-form-input>
+              <b-input-group-append>
+                <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </b-form-group>
           <b-table
-            ref="selectableTable"
+            sticky-header
+            class='tabella'
+            sort-icon-left
             selectable
             :select-mode="selectMode"
             :items="gruppo"
             :fields="fields"
+            :filter="filter"
             @row-selected="onRowSelected"
             responsive="sm"
           >
@@ -127,16 +149,31 @@ export default {
       },
       selected: [],
       modes: ['multi', 'single'],
-      fields: ['nome', 'prof', 'quota'],
+      fields: [
+        {
+          key: 'nome',
+          sortable: true,
+        },
+        {
+          key: 'prof',
+          sortable: true,
+        },
+        {
+          key: 'quota',
+          aortable: true,
+        },
+      ],
       selectMode: 'multi',
       numRecords: 0,
       reports: [],
       pozzi: [],
       gruppo: [],
       coordinate: [],
+      filter: null,
+      filterOn: [],
     };
   },
-
+  
   mounted() {
     fetch('static/data/pozzi.json')
       .then(res => res.json())
@@ -237,5 +274,9 @@ export default {
 </script>
 
 <style scoped>
-
+.tabella {
+  height: 400px;
+  overflow: scroll;
+  overflow-style: marquee-block;
+}
 </style>

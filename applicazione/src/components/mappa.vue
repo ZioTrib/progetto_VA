@@ -1,5 +1,5 @@
 <template>
-  <vue-plotly @hover="hover"  :data="data" :layout="layout" :config="config"/>
+  <vue-plotly  :data="data" :layout="layout" :config="config"/>
 </template>
 
 <script>
@@ -52,7 +52,9 @@ export default {
         mapbox: { style: 'stamen-terrain', center: { lat: 43, lon: 10 }, zoom: 4 },
         margin: { r: 0, t: 0, b: 0, l: 0 },
       },
-      config: { responsive: true },
+      config: {
+        responsive: true,
+      },
     };
   },
   watch: {
