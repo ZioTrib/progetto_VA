@@ -1,10 +1,9 @@
 <template>
-  <vue-plotly  :data="data" :layout="layout" :config="config"/>
+  <vue-plotly  ref="Plotly" :data="data" :layout="layout" :config="config"/>
 </template>
 
 <script>
 import VuePlotly from '@statnett/vue-plotly';
-
 
 export default {
   name: 'chart',
@@ -63,6 +62,11 @@ export default {
       this.data[0].lat = datum.map(d => d.lat);
       this.data[0].text = datum.map(d => d.name);
       this.data[0].marker.color = datum.map(d => d.prof);
+      this.$refs.Plotly.$on('click', () => {
+        /* eslint-disable */
+        alert('You clicked this Plotly chart!');
+        
+      });
     },
   },
 };

@@ -173,7 +173,6 @@ export default {
       filterOn: [],
     };
   },
-  
   mounted() {
     fetch('static/data/pozzi.json')
       .then(res => res.json())
