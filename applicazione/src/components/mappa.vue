@@ -11,7 +11,7 @@ export default {
     VuePlotly,
   },
   props: {
-    coordinate: Array,
+    datimappa: Array,
   },
 
   data() {
@@ -69,7 +69,7 @@ export default {
     };
   },
   watch: {
-    coordinate(datum) {
+    datimappa(datum) {
       this.data[0].lon = datum.map(d => d.lon);
       this.data[0].lat = datum.map(d => d.lat);
       this.data[0].text = datum.map(d => d.nome);
@@ -88,7 +88,7 @@ export default {
       this.data[0].stato = datum.map(d => d.stato);
       this.$refs.Plotly.$on('click', (d) => {
         /* eslint-disable */
-        window.alert(
+        alert(
           `Nome:\n${d.points[0].data.nome[d.points[0].pointNumber]
           }\n\nLatitudine:\n${d.points[0].data.lat[d.points[0].pointNumber]
           }\n\nLongitudine:\n${d.points[0].data.lon[d.points[0].pointNumber]

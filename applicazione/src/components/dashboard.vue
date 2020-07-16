@@ -4,13 +4,13 @@
       <b-col cols="9">
         <h2>Mappa dei pozzi in italia</h2>
         <div style="height:500px; background-color: beige">
-          <mappa :coordinate="coordinate"></mappa>
+          <mappa :datimappa="datimappa"></mappa>
         </div>
       </b-col>
       <b-col cols="3">
         <h2>informazioni del pozzo</h2>
         <div style="height:100px; background-color: beige">
-          <informazioni measure="# Records" :value = "numRecords"></informazioni>
+          <informazioni measure="Numero di pozzi: " :value = "numRecords"></informazioni>
         </div>
         <b-col>
           <div>
@@ -35,8 +35,10 @@
       <b-col>
         <h3> elenco pozzi </h3>
         <div>
-          <b-form-group label="Selection mode:" label-cols-md="4">
-            <b-form-select v-model="selectMode" :options="modes" class="mb-3"></b-form-select>
+          <b-form-group label="Tipo di Selezione:" label-cols-md="4">
+            <b-form-select
+              v-model="tabella.selectMode" :options="tabella.modes" class="mb-3">
+            </b-form-select>
           </b-form-group>
           <b-form-group
             label="Filter"
@@ -48,13 +50,13 @@
           >
             <b-input-group size="sm">
               <b-form-input
-                v-model="filter"
+                v-model="tabella.filter"
                 type="search"
                 id="filterInput"
-                placeholder="Type to Search"
+                placeholder="Digita per Cercare"
               ></b-form-input>
               <b-input-group-append>
-                <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+                <b-button :disabled="!tabella.filter" @click="tabella.filter = ''">Clear</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-form-group>
@@ -63,10 +65,10 @@
             class='tabella'
             sort-icon-left
             selectable
-            :select-mode="selectMode"
-            :items="gruppo"
-            :fields="fields"
-            :filter="filter"
+            :select-mode="tabella.selectMode"
+            :items="tabella.gruppo"
+            :fields="tabella.fields"
+            :filter="tabella.filter"
             @row-selected="onRowSelected"
             responsive="sm"
           >
@@ -84,14 +86,14 @@
           </b-table>
           <p>
             Selected Rows:<br>
-            {{ selected }}
+            {{ tabella.selected }}
           </p>
         </div>
       </b-col>
       <b-col>
         <h3> quota e profondità pozzi </h3>
         <div style="height:500px; background-color: beige">
-        <chart :Aggregation="pozzi"></chart>
+        <chart :Aggregation="chart.profalt"></chart>
         </div>
       </b-col>
     </b-row>
@@ -135,6 +137,7 @@ export default {
   },
   data() {
     return {
+      reports: [],
       uso: {
         selected: 'TUTTI',
         options: ['TUTTI'],
@@ -147,30 +150,35 @@ export default {
         selected: 'TUTTI',
         options: ['TUTTI'],
       },
-      selected: [],
-      modes: ['multi', 'single'],
-      fields: [
-        {
-          key: 'nome',
-          sortable: true,
-        },
-        {
-          key: 'prof',
-          sortable: true,
-        },
-        {
-          key: 'quota',
-          aortable: true,
-        },
-      ],
-      selectMode: 'multi',
+      tabella: {
+        selectMode: 'multi',
+        modes: ['multi', 'single'],
+        gruppo: [],
+        fields: [
+          {
+            key: 'nome',
+            sortable: true,
+          },
+          {
+            key: 'prof',
+            text: 'profondità',
+            sortable: true,
+          },
+          {
+            key: 'quota',
+
+            sortable: true,
+          },
+        ],
+        selected: [],
+        filter: null,
+        filterOn: [],
+      },
       numRecords: 0,
-      reports: [],
-      pozzi: [],
-      gruppo: [],
-      coordinate: [],
-      filter: null,
-      filterOn: [],
+      datimappa: [],
+      chart: {
+        profalt: [],
+      },
     };
   },
   mounted() {
@@ -220,14 +228,14 @@ export default {
     // TODO: implementare selezione per valore == 'TUTTI'
     refreshTable() {
       if (this.uso.selected === 'TUTTI' && this.scopo.selected === 'TUTTI' && this.tipo.selected === 'TUTTI') {
-        this.gruppo = this.reports;
+        this.tabella.gruppo = this.reports;
       } else {
-        this.gruppo = this.reports.filter(selected =>
+        this.tabella.gruppo = this.reports.filter(selected =>
           selected.uso === this.uso.selected &&
           selected.scopo === this.scopo.selected &&
           selected.tipo === this.tipo.selected);
       }
-      this.coordinate = this.gruppo.map(v => ({
+      this.datimappa = this.tabella.gruppo.map(v => ({
         lon: v.lon_wgs84,
         lat: v.lat_wgs84,
         uso: v.uso,
@@ -250,7 +258,11 @@ export default {
 
     onRowSelected(items) {
       this.selected = items;
-      this.pozzi = this.selected.map(v => ({ key: v.nome, value1: +v.prof, value2: +v.quota }));
+      this.chart.profalt = this.selected.map(v => ({
+        key: v.nome,
+        value1: +v.prof,
+        value2: +v.quota,
+      }));
     },
   },
   watch: {
