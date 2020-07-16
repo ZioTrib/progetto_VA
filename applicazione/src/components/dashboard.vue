@@ -186,6 +186,15 @@ export default {
           scopo: d.scopo,
           lon_wgs84: d.lon_wgs84,
           lat_wgs84: d.lat_wgs84,
+          key: +d.key,
+          entitam: d.entitam,
+          regione: d.regione,
+          provincia: d.provincia,
+          proprietar: d.proprietar,
+          datacomp: d.datacomp,
+          esito: d.esito,
+          posizione: d.posizione,
+          stato: d.stato,
         }));
         cf = crossfilter(this.reports);
         duso = cf.dimension(d => d.uso);
@@ -221,8 +230,21 @@ export default {
       this.coordinate = this.gruppo.map(v => ({
         lon: v.lon_wgs84,
         lat: v.lat_wgs84,
-        name: [v.nome, v.scopo, v.uso, v.tipo],
-        prof: +v.prof,
+        uso: v.uso,
+        tipo: v.tipo,
+        prof: v.prof,
+        nome: v.nome,
+        quota: v.quota,
+        scopo: v.scopo,
+        key: v.key,
+        entitam: v.entitam,
+        regione: v.regione,
+        provincia: v.provincia,
+        proprietar: v.proprietar,
+        datacomp: v.datacomp,
+        esito: v.esito,
+        posizione: v.posizione,
+        stato: v.stato,
       }));
     },
 
