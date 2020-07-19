@@ -4,7 +4,7 @@
 
 <script>
 import VuePlotly from '@statnett/vue-plotly';
-//  TODO: le quote negative devono partire da 0
+
 export default {
   name: 'chart',
   components: {
@@ -17,29 +17,39 @@ export default {
     const trace1 = {
       x: [],
       y: [],
+      base: 0,
       name: 'profondità',
       type: 'bar',
-
+      marker: {
+      },
     };
     const trace2 = {
       x: [],
       y: [],
+      base: 0,
       name: 'quota',
       type: 'bar',
-
+      marker: {
+      },
     };
     return {
       data: [trace1, trace2],
       layout: {
-        heigth: 600,
-        barmode: 'relative',
+        autosize: true,
+        barmode: 'stack',
         dragmode: 'pan',
         scrollZoom: true,
         xaxis: {
+          title: 'nomi pozzi',
           type: 'category',
+          base: 0,
+        },
+        yaxis: {
+          title: 'profondità / quota',
         },
       },
       config: {
+        responsive: true,
       },
       options: {
       },

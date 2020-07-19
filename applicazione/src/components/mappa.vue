@@ -12,6 +12,7 @@ export default {
   },
   props: {
     datimappa: Array,
+    selettore: String,
   },
 
   data() {
@@ -59,6 +60,7 @@ export default {
       ],
       layout: {
         colorbar: true,
+        autosize: true,
         dragmode: 'zoom',
         mapbox: { style: 'stamen-terrain', center: { lat: 43, lon: 10 }, zoom: 4 },
         margin: { r: 0, t: 0, b: 0, l: 0 },
@@ -72,7 +74,11 @@ export default {
     datimappa(datum) {
       this.data[0].lon = datum.map(d => d.lon);
       this.data[0].lat = datum.map(d => d.lat);
-      this.data[0].text = datum.map(d => d.nome);
+      if (this.selettore === 'PROFONDITA') {
+        this.data[0].text = 'ok';
+      } else {
+        this.data[0].text = datum.map(d => d.text);
+      }
       this.data[0].marker.color = datum.map(d => d.prof);
       this.data[0].key = datum.map(d => d.key);
       this.data[0].nome = datum.map(d => d.nome);
@@ -105,6 +111,13 @@ export default {
         );
       });
     },
+    selettore(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.selettore = newVal;
+        this.datimappa = newVal;
+      }
+    },
+    deep: true, // force watching within properties
   },
 };
 </script>

@@ -1,116 +1,133 @@
 <template>
   <b-container class="dashboard">
-    <b-row class="text-center">
-      <b-col cols="9">
-        <h2>Mappa dei pozzi in italia</h2>
-        <div style="height:500px; background-color: beige">
-          <mappa :datimappa="datimappa"></mappa>
-        </div>
-      </b-col>
-      <b-col cols="3">
-        <h2>informazioni del pozzo</h2>
-        <div style="height:100px; background-color: beige">
-          <informazioni measure="Numero di pozzi: " :value = "numRecords"></informazioni>
-        </div>
-        <b-col>
-          <div>
-            <h4>Attributi</h4>
-            <div>
-              <b-form-select v-model="uso.selected" :options="uso.options"></b-form-select>
-              <div class="mt-3">Selected: <strong>{{ uso.selected }}</strong></div>
-            </div>
-            <div>
-              <b-form-select v-model="scopo.selected" :options="scopo.options"></b-form-select>
-              <div class="mt-3">Selected: <strong>{{ scopo.selected }}</strong></div>
-            </div>
-            <div>
-              <b-form-select v-model="tipo.selected" :options="tipo.options"></b-form-select>
-              <div class="mt-3">Selected: <strong>{{ tipo.selected }}</strong></div>
-            </div>
-          </div>
-        </b-col>
-      </b-col>
-    </b-row>
-    <b-row class="text-center">
-      <b-col>
-        <h3> elenco pozzi </h3>
-        <div>
-          <b-form-group label="Tipo di Selezione:" label-cols-md="4">
-            <b-form-select
-              v-model="tabella.selectMode" :options="tabella.modes" class="mb-3">
-            </b-form-select>
-          </b-form-group>
-          <b-form-group
-            label="Filter"
-            label-cols-sm="3"
-            label-align-sm="right"
-            label-size="sm"
-            label-for="filterInput"
-            class="mb-0"
-          >
-            <b-input-group size="sm">
-              <b-form-input
-                v-model="tabella.filter"
-                type="search"
-                id="filterInput"
-                placeholder="Digita per Cercare"
-              ></b-form-input>
-              <b-input-group-append>
-                <b-button :disabled="!tabella.filter" @click="tabella.filter = ''">Clear</b-button>
-              </b-input-group-append>
-            </b-input-group>
-          </b-form-group>
-          <b-table
-            sticky-header
-            class='tabella'
-            sort-icon-left
-            selectable
-            :select-mode="tabella.selectMode"
-            :items="tabella.gruppo"
-            :fields="tabella.fields"
-            :filter="tabella.filter"
-            @row-selected="onRowSelected"
-            responsive="sm"
-          >
-            <!-- Example scoped slot for select state illustrative purposes -->
-            <template v-slot:cell(selected)="{ rowSelected }">
-              <template v-if="rowSelected">
-                <span aria-hidden="true">&check;</span>
-                <span class="sr-only">Selected</span>
+    <div>
+      <b-button v-b-toggle.mappa variant="primary" class="m-1"> Mappa dei pozzi in italia</b-button>
+      <b-collapse visible id="mappa" class="mt-1">
+        <b-card>
+          <b-row class="text-center">
+            <b-col>
+              <div style="height:475px; background-color: beige">
+                <mappa :datimappa="datimappa" :selettore = "selettore.selected"></mappa>
+              </div>
+            </b-col>
+          </b-row>
+          <b-button v-b-toggle.collapse-1-inner size="sm">visualizzazione</b-button>
+          <b-collapse id="collapse-1-inner" class="mt-1">
+            <b-card>
+              <b-row>
+                <b-col>
+              <b-form-group>
+              <b-form-checkbox-group
+                v-model="selettore.selected"
+                :options="selettore.options"
+                name="buttonsSelector"
+                buttons
+              ></b-form-checkbox-group>
+            </b-form-group>
+                </b-col>
+                </b-row>
+            </b-card>
+          </b-collapse>
+        </b-card>
+      </b-collapse>
+    </div>
+    <div>
+      <b-button v-b-toggle.elencopozzi variant="primary" class="m-1">Elenco dei pozzi</b-button>
+      <b-collapse  id="elencopozzi" class="m-1">
+        <b-card>
+          <b-row>
+              <b-col lg="6" class="my-1">
+            <b-form-group label="Tipo di Selezione:" label-cols-md="4">
+              <b-form-select
+                v-model="tabella.selectMode" :options="tabella.modes">
+              </b-form-select>
+            </b-form-group>
+                <div>
+                  <b-form-select
+                    v-model="regione.selected"
+                    :options="regione.options"></b-form-select>
+                  <div class="mt-3">Selected: <strong>{{ regione.selected }}</strong></div>
+                </div>
+              </b-col>
+              <b-col lg="3">
+                <div style="height:200px; background-color: beige">
+                  <informazioni measure="Numero di pozzi: " :value = "numRecords"></informazioni>
+                </div>
+              </b-col>
+            <b-col lg="3">
+              <div style="height:200px; background-color: beige">
+                <informazioni
+                  measure="Numero di pozzi selezionati: "
+                  :value = "tabella.selezionati"></informazioni>
+              </div>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <b-table
+                selectable
+                :select-mode="tabella.selectMode"
+                @row-selected="onRowSelected"
+                responsive="sm"
+                sticky-header
+                :fields="tabella.fields"
+                class='tabella'
+                ref="selectableTable"
+                striped show-empty :items="filtered">
+              <template slot="top-row" slot-scope="{ fields }">
+                <td v-for="field in fields" :key="field.key">
+                  <input v-model="filters[field.key]" :placeholder="field.label">
+                </td>
               </template>
-              <template v-else>
-                <span aria-hidden="true">&nbsp;</span>
-                <span class="sr-only">Not selected</span>
-              </template>
-            </template>
-          </b-table>
-          <p>
-            Selected Rows:<br>
-            {{ tabella.selected }}
-          </p>
-        </div>
-      </b-col>
-      <b-col>
-        <h3> quota e profondità pozzi </h3>
-        <div style="height:500px; background-color: beige">
-        <chart :Aggregation="chart.profalt"></chart>
-        </div>
-      </b-col>
-    </b-row>
-    <b-row class="text-center">
-      <b-col>
-        <h3> 1</h3>
-        <div style="height:250px; background-color: beige"></div>
-      </b-col>
-      <b-col>
-        <h3> 2 </h3>
-        <div style="height:250px; background-color: beige"></div>
-      </b-col>
-      <b-col>
-        <h3> 3 </h3>
-        <div style="height:250px; background-color: beige"></div>
-      </b-col>
-    </b-row>
+                <template v-slot:cell(selezionato)="{ rowSelected }">
+                  <template v-if="rowSelected">
+                    <span aria-hidden="true">&check;</span>
+                    <span class="sr-only">Selected</span>
+                  </template>
+                  <template v-else>
+                    <span aria-hidden="true">&nbsp;</span>
+                    <span class="sr-only">Not selected</span>
+                  </template>
+                </template>
+            </b-table>
+            <p>
+              <b-button size="sm" @click="selectAllRows">Seleziona Tutto</b-button>
+              <b-button size="sm" @click="clearSelected">Deseleziona Tutto</b-button>
+            </p>
+          </b-col>
+          </b-row>
+        </b-card>
+      </b-collapse>
+    </div>
+    <div>
+    <b-button v-b-toggle.prof variant="primary" class="m-1">Profondità e Quota</b-button>
+      <b-button v-b-toggle.temperatura variant="primary" class="m-1">Temperatura</b-button>
+      <b-button v-b-toggle.litologia variant="primary" class="m-1">Litologia</b-button>
+      <b-collapse  id="prof" class="m-1">
+          <b-card>
+            <h3> quota e profondità pozzi </h3>
+              <div style="height:500px; background-color: beige">
+                <chart :Aggregation="chart.profalt"></chart>
+              </div>
+            </b-card>
+        </b-collapse>
+      <b-collapse  id="temperatura" class="m-1">
+        <b-card>
+          <b-row>
+            <b-col>
+            </b-col>
+          </b-row>
+        </b-card>
+      </b-collapse>
+      <b-collapse  id="litologia" class="m-1">
+        <b-card>
+          <b-row>
+            <b-col>
+            </b-col>
+          </b-row>
+        </b-card>
+      </b-collapse>
+    </div>
   </b-container>
 </template>
 
@@ -123,10 +140,7 @@ import mappa from './mappa';
 
 // crossfilter data management
 let cf; // crossfilter instance
-let duso;
-let dscopo;
-let dtipo;
-
+let dregione;
 
 export default {
   name: 'dashboard',
@@ -138,6 +152,14 @@ export default {
   data() {
     return {
       reports: [],
+      selettore: {
+        selected: 'top',
+        options: [],
+      },
+      regione: {
+        selected: 'TUTTI',
+        options: ['TUTTI'],
+      },
       uso: {
         selected: 'TUTTI',
         options: ['TUTTI'],
@@ -150,34 +172,67 @@ export default {
         selected: 'TUTTI',
         options: ['TUTTI'],
       },
+      stato: {
+        selected: 'TUTTI',
+        options: ['TUTTI'],
+      },
+      esito: {
+        selected: 'TUTTI',
+        options: ['TUTTI'],
+      },
       tabella: {
         selectMode: 'multi',
         modes: ['multi', 'single'],
         gruppo: [],
         fields: [
+          'selezionato',
           {
             key: 'nome',
+            label: 'Nome Pozzo',
             sortable: true,
           },
           {
             key: 'prof',
-            text: 'profondità',
+            label: 'Profondità',
             sortable: true,
           },
           {
             key: 'quota',
-
+            label: 'Quota',
+            sortable: true,
+          },
+          {
+            key: 'tipo',
+            label: 'Tipo',
+            sortable: true,
+          },
+          {
+            key: 'uso',
+            label: 'Uso',
+            sortable: true,
+          },
+          {
+            key: 'esito',
+            label: 'Esito',
+            sortable: true,
+          },
+          {
+            key: 'stato',
+            label: 'Stato',
             sortable: true,
           },
         ],
-        selected: [],
-        filter: null,
-        filterOn: [],
+        selezionati: 0,
       },
       numRecords: 0,
       datimappa: [],
       chart: {
         profalt: [],
+      },
+      filters: {
+        nome: '',
+        quota: '',
+        prof: '',
       },
     };
   },
@@ -205,42 +260,51 @@ export default {
           stato: d.stato,
         }));
         cf = crossfilter(this.reports);
-        duso = cf.dimension(d => d.uso);
-        dscopo = cf.dimension(d => d.scopo);
-        dtipo = cf.dimension(d => d.tipo);
+        dregione = cf.dimension(d => d.regione);
 
-        cf.groupAll().reduceCount().value();
 
-        this.uso.options = ['TUTTI'].concat(duso.group().reduceCount().all().map(v => v.key));
-        this.uso.selected = this.uso.options[0];
-        this.scopo.options = ['TUTTI'].concat(dscopo.group().reduceCount().all().map(v => v.key));
-        this.scopo.selected = this.scopo.options[0];
-        this.tipo.options = ['TUTTI'].concat(dtipo.group().reduceCount().all().map(v => v.key));
-        this.tipo.selected = this.tipo.options[0];
+        this.regione.options = ['TUTTE'].concat(dregione.group().reduceCount().all().map(v => v.key));
+        this.regione.selected = this.regione.options[0];
+        this.selettore.options = ['PROFONDITA', 'TEMPERATURA', 'LITOLOGIA'];
+        this.selettore.selected = this.selettore.options[0];
         this.refreshCounters();
         this.refreshTable();
       });
+  },
+  computed: {
+    filtered() {
+      const filtered = this.tabella.gruppo.filter(item => Object.keys(this.filters).every(key =>
+        String(item[key]).includes(this.filters[key])));
+      return filtered.length > 0 ? filtered : [{
+        nome: '',
+        quota: '',
+        prof: '',
+      }];
+    },
   },
   methods: {
     refreshCounters() {
       this.numRecords = cf.groupAll().reduceCount().value();
     },
-    // TODO: implementare selezione per valore == 'TUTTI'
     refreshTable() {
-      if (this.uso.selected === 'TUTTI' && this.scopo.selected === 'TUTTI' && this.tipo.selected === 'TUTTI') {
+      if (this.regione.selected === 'TUTTE') {
         this.tabella.gruppo = this.reports;
       } else {
         this.tabella.gruppo = this.reports.filter(selected =>
-          selected.uso === this.uso.selected &&
-          selected.scopo === this.scopo.selected &&
-          selected.tipo === this.tipo.selected);
+          selected.regione === this.regione.selected);
       }
-      this.datimappa = this.tabella.gruppo.map(v => ({
+      this.datimappa = this.filtered.map(v => ({
         lon: v.lon_wgs84,
         lat: v.lat_wgs84,
         uso: v.uso,
         tipo: v.tipo,
         prof: v.prof,
+        text: [
+          `Nome:${v.nome}`,
+          `Regione:${v.regione}`,
+          `Provincia:${v.provincia}`,
+          `proprietario:${v.proprietar}`,
+        ],
         nome: v.nome,
         quota: v.quota,
         scopo: v.scopo,
@@ -257,45 +321,28 @@ export default {
     },
 
     onRowSelected(items) {
-      this.selected = items;
-      this.chart.profalt = this.selected.map(v => ({
+      this.selectedTable = items;
+      this.chart.profalt = this.selectedTable.map(v => ({
         key: v.nome,
         value1: +v.prof,
         value2: +v.quota,
       }));
+      this.tabella.selezionati = this.selectedTable.length;
+    },
+    selectAllRows() {
+      this.$refs.selectableTable.selectAllRows();
+    },
+    clearSelected() {
+      this.$refs.selectableTable.clearSelected();
     },
   },
   watch: {
-    uso: {
+    regione: {
       handler(newVal) {
-        if (newVal.selected === 'TUTTI') {
-          duso.filter(null);
+        if (newVal.selected === 'TUTTE') {
+          dregione.filter(null);
         } else {
-          duso.filter(newVal.selected);
-        }
-        this.refreshCounters();
-        this.refreshTable();
-      },
-      deep: true, // force watching within properties
-    },
-    scopo: {
-      handler(newVal) {
-        if (newVal.selected === 'TUTTI') {
-          dscopo.filter(null);
-        } else {
-          dscopo.filter(newVal.selected);
-        }
-        this.refreshCounters();
-        this.refreshTable();
-      },
-      deep: true, // force watching within properties
-    },
-    tipo: {
-      handler(newVal) {
-        if (newVal.selected === 'TUTTI') {
-          dtipo.filter(null);
-        } else {
-          dtipo.filter(newVal.selected);
+          dregione.filter(newVal.selected);
         }
         this.refreshCounters();
         this.refreshTable();
