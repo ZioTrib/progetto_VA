@@ -1,8 +1,98 @@
 <template>
   <b-container class="dashboard">
     <div>
-      <b-button v-b-toggle.mappa variant="primary" class="m-1"> Mappa dei pozzi in italia</b-button>
-      <b-collapse visible id="mappa" class="mt-1">
+      <b-button v-b-toggle.elencopozzi variant="primary" class="m-1">Elenco dei pozzi</b-button>
+      <b-collapse  visible id="elencopozzi" class="m-1">
+        <b-card>
+          <b-row>
+            <b-col lg="6" class="my-1">
+              <b-form-group label="Tipo di Selezione:" label-cols-md="4">
+                <b-form-select
+                  v-model="tabella.selectMode" :options="tabella.modes">
+                </b-form-select>
+              </b-form-group>
+              <div>
+                <b-form-select
+                  v-model="regione.selected"
+                  :options="regione.options"></b-form-select>
+                <div class="mt-3">Selected: <strong>{{ regione.selected }}</strong></div>
+              </div>
+              <div>
+                <b-form-input
+                  id="range-2"
+                  v-model="sliderprof.valore"
+                  type="range"
+                  min="0"
+                  max="4000"
+                  step="0.01">
+                </b-form-input>
+                <div class="mt-2">Value: {{ sliderprof.valore }}</div>
+              </div>
+              <div>
+                <b-form-input
+                  id="range-2"
+                  v-model="sliderquota.valore"
+                  type="range"
+                  min="0"
+                  max="4000"
+                  step="0.01">
+                </b-form-input>
+                <div class="mt-2">Value: {{ sliderquota.valore }}</div>
+              </div>
+            </b-col>
+            <b-col lg="3">
+              <div style="height:200px; background-color: beige">
+                <informazioni measure="Numero di pozzi: " :value = "numRecords"></informazioni>
+              </div>
+            </b-col>
+            <b-col lg="3">
+              <div style="height:200px; background-color: beige">
+                <informazioni
+                  measure="Numero di pozzi selezionati: "
+                  :value = "tabella.selezionati"></informazioni>
+              </div>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <b-table
+                selectable
+                :select-mode="tabella.selectMode"
+                @row-selected="onRowSelected"
+                responsive="sm"
+                sticky-header
+                :fields="tabella.fields"
+                class='tabella'
+                ref="selectableTable"
+                striped show-empty :items="filtered">
+                <template slot="top-row" slot-scope="{ fields }">
+                  <td v-for="field in fields" :key="field.key">
+                    <input v-model="filters[field.key]" :placeholder="field.label">
+                  </td>
+                </template>
+                <template v-slot:cell(selezionato)="{ rowSelected }">
+                  <template v-if="rowSelected">
+                    <span aria-hidden="true">&check;</span>
+                    <span class="sr-only">Selected</span>
+                  </template>
+                  <template v-else>
+                    <span aria-hidden="true">&nbsp;</span>
+                    <span class="sr-only">Not selected</span>
+                  </template>
+                </template>
+              </b-table>
+              <p>
+                <b-button size="sm" @click="selectAllRows">Seleziona Tutto</b-button>
+                <b-button size="sm" @click="clearSelected">Deseleziona Tutto</b-button>
+              </p>
+            </b-col>
+          </b-row>
+        </b-card>
+      </b-collapse>
+    </div>
+    <div>
+      <b-button v-b-toggle.mappa variant="primary" class="m-1"> Mappa dei pozzi in Italia</b-button>
+      <b-collapse id="mappa" class="mt-1">
         <b-card>
           <b-row class="text-center">
             <b-col>
@@ -28,74 +118,6 @@
                 </b-row>
             </b-card>
           </b-collapse>
-        </b-card>
-      </b-collapse>
-    </div>
-    <div>
-      <b-button v-b-toggle.elencopozzi variant="primary" class="m-1">Elenco dei pozzi</b-button>
-      <b-collapse  id="elencopozzi" class="m-1">
-        <b-card>
-          <b-row>
-              <b-col lg="6" class="my-1">
-            <b-form-group label="Tipo di Selezione:" label-cols-md="4">
-              <b-form-select
-                v-model="tabella.selectMode" :options="tabella.modes">
-              </b-form-select>
-            </b-form-group>
-                <div>
-                  <b-form-select
-                    v-model="regione.selected"
-                    :options="regione.options"></b-form-select>
-                  <div class="mt-3">Selected: <strong>{{ regione.selected }}</strong></div>
-                </div>
-              </b-col>
-              <b-col lg="3">
-                <div style="height:200px; background-color: beige">
-                  <informazioni measure="Numero di pozzi: " :value = "numRecords"></informazioni>
-                </div>
-              </b-col>
-            <b-col lg="3">
-              <div style="height:200px; background-color: beige">
-                <informazioni
-                  measure="Numero di pozzi selezionati: "
-                  :value = "tabella.selezionati"></informazioni>
-              </div>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <b-table
-                selectable
-                :select-mode="tabella.selectMode"
-                @row-selected="onRowSelected"
-                responsive="sm"
-                sticky-header
-                :fields="tabella.fields"
-                class='tabella'
-                ref="selectableTable"
-                striped show-empty :items="filtered">
-              <template slot="top-row" slot-scope="{ fields }">
-                <td v-for="field in fields" :key="field.key">
-                  <input v-model="filters[field.key]" :placeholder="field.label">
-                </td>
-              </template>
-                <template v-slot:cell(selezionato)="{ rowSelected }">
-                  <template v-if="rowSelected">
-                    <span aria-hidden="true">&check;</span>
-                    <span class="sr-only">Selected</span>
-                  </template>
-                  <template v-else>
-                    <span aria-hidden="true">&nbsp;</span>
-                    <span class="sr-only">Not selected</span>
-                  </template>
-                </template>
-            </b-table>
-            <p>
-              <b-button size="sm" @click="selectAllRows">Seleziona Tutto</b-button>
-              <b-button size="sm" @click="clearSelected">Deseleziona Tutto</b-button>
-            </p>
-          </b-col>
-          </b-row>
         </b-card>
       </b-collapse>
     </div>
@@ -142,6 +164,7 @@ import mappa from './mappa';
 let cf; // crossfilter instance
 let dregione;
 
+
 export default {
   name: 'dashboard',
   components: {
@@ -151,6 +174,12 @@ export default {
   },
   data() {
     return {
+      sliderprof: {
+        valore: 4000,
+      },
+      sliderquota: {
+        valore: 4000,
+      },
       reports: [],
       selettore: {
         selected: 'top',
@@ -261,6 +290,8 @@ export default {
         }));
         cf = crossfilter(this.reports);
         dregione = cf.dimension(d => d.regione);
+        // dprof = cf.dimension(d => d.prof);
+        // dquota = cf.dimension(d => d.quota);
 
 
         this.regione.options = ['TUTTE'].concat(dregione.group().reduceCount().all().map(v => v.key));
@@ -288,12 +319,24 @@ export default {
     },
     refreshTable() {
       if (this.regione.selected === 'TUTTE') {
-        this.tabella.gruppo = this.reports;
+        this.tabella.gruppo = this.reports.filter(selected =>
+          selected.prof <= this.sliderprof.valore);
       } else {
         this.tabella.gruppo = this.reports.filter(selected =>
-          selected.regione === this.regione.selected);
+          selected.regione === this.regione.selected &&
+          selected.prof <= this.sliderprof.valore &&
+          selected.quota <= this.sliderquota.valore);
       }
-      this.datimappa = this.filtered.map(v => ({
+    },
+
+    onRowSelected(items) {
+      this.selectedTable = items;
+      this.chart.profalt = this.selectedTable.map(v => ({
+        key: v.nome,
+        value1: +v.prof,
+        value2: +v.quota,
+      }));
+      this.datimappa = this.selectedTable.map(v => ({
         lon: v.lon_wgs84,
         lat: v.lat_wgs84,
         uso: v.uso,
@@ -318,15 +361,6 @@ export default {
         posizione: v.posizione,
         stato: v.stato,
       }));
-    },
-
-    onRowSelected(items) {
-      this.selectedTable = items;
-      this.chart.profalt = this.selectedTable.map(v => ({
-        key: v.nome,
-        value1: +v.prof,
-        value2: +v.quota,
-      }));
       this.tabella.selezionati = this.selectedTable.length;
     },
     selectAllRows() {
@@ -343,6 +377,26 @@ export default {
           dregione.filter(null);
         } else {
           dregione.filter(newVal.selected);
+        }
+        this.refreshCounters();
+        this.refreshTable();
+      },
+      deep: true, // force watching within properties
+    },
+    sliderprof: {
+      handler(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.sliderprof.valore = newVal;
+        }
+        this.refreshCounters();
+        this.refreshTable();
+      },
+      deep: true, // force watching within properties
+    },
+    sliderquota: {
+      handler(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          this.sliderquota.valore = newVal;
         }
         this.refreshCounters();
         this.refreshTable();
