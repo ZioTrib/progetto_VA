@@ -43,6 +43,7 @@ export default {
           title: 'nomi pozzi',
           type: 'category',
           base: 0,
+          rangeslider: {},
         },
         yaxis: {
           title: 'profondità / quota',

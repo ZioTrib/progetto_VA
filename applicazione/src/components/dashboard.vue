@@ -163,7 +163,8 @@ import mappa from './mappa';
 // crossfilter data management
 let cf; // crossfilter instance
 let dregione;
-
+let dprof;
+let dquota;
 
 export default {
   name: 'dashboard',
@@ -176,9 +177,12 @@ export default {
     return {
       sliderprof: {
         valore: 4000,
+        max: '',
       },
       sliderquota: {
         valore: 4000,
+        min: '',
+        max: '',
       },
       reports: [],
       selettore: {
@@ -186,26 +190,6 @@ export default {
         options: [],
       },
       regione: {
-        selected: 'TUTTI',
-        options: ['TUTTI'],
-      },
-      uso: {
-        selected: 'TUTTI',
-        options: ['TUTTI'],
-      },
-      scopo: {
-        selected: 'TUTTI',
-        options: ['TUTTI'],
-      },
-      tipo: {
-        selected: 'TUTTI',
-        options: ['TUTTI'],
-      },
-      stato: {
-        selected: 'TUTTI',
-        options: ['TUTTI'],
-      },
-      esito: {
         selected: 'TUTTI',
         options: ['TUTTI'],
       },
@@ -290,10 +274,10 @@ export default {
         }));
         cf = crossfilter(this.reports);
         dregione = cf.dimension(d => d.regione);
-        // dprof = cf.dimension(d => d.prof);
-        // dquota = cf.dimension(d => d.quota);
+        dprof = cf.dimension(d => d.prof);
+        dquota = cf.dimension(d => d.quota);
 
-
+        dprof.filter([0, this.sliderprof.valore]);
         this.regione.options = ['TUTTE'].concat(dregione.group().reduceCount().all().map(v => v.key));
         this.regione.selected = this.regione.options[0];
         this.selettore.options = ['PROFONDITA', 'TEMPERATURA', 'LITOLOGIA'];
@@ -397,6 +381,7 @@ export default {
       handler(newVal, oldVal) {
         if (newVal !== oldVal) {
           this.sliderquota.valore = newVal;
+          dquota.filter([0, newVal]);
         }
         this.refreshCounters();
         this.refreshTable();
