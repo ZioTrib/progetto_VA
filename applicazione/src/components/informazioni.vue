@@ -1,8 +1,8 @@
 <template>
   <b-row class="counter">
     <b-col>
-      <h3 class="measure">{{measure}}</h3>
-      <h1 class="value">{{value}}</h1>
+      <h4 class="measure">{{measure}}</h4>
+      <h2 class="value">{{value}}</h2>
     </b-col>
   </b-row>
 </template>

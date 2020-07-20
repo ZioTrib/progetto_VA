@@ -23,8 +23,8 @@
                   v-model="sliderprof.valore"
                   type="range"
                   min="0"
-                  max="4000"
-                  step="0.01">
+                  :max= "sliderprof.max"
+                  step="0.5">
                 </b-form-input>
                 <div class="mt-2">Value: {{ sliderprof.valore }}</div>
               </div>
@@ -33,16 +33,17 @@
                   id="range-2"
                   v-model="sliderquota.valore"
                   type="range"
-                  min="0"
-                  max="4000"
-                  step="0.01">
+                  :min="sliderquota.min"
+                  :max="sliderquota.max"
+                  step="0.5">
                 </b-form-input>
                 <div class="mt-2">Value: {{ sliderquota.valore }}</div>
               </div>
             </b-col>
             <b-col lg="3">
               <div style="height:200px; background-color: beige">
-                <informazioni measure="Numero di pozzi: " :value = "numRecords"></informazioni>
+                <informazioni
+                  measure = "Numero di pozzi: " :value = "numberofrecords" ></informazioni>
               </div>
             </b-col>
             <b-col lg="3">
@@ -155,16 +156,18 @@
 
 
 <script>
+import * as d3 from 'd3';
 import crossfilter from 'crossfilter';
 import informazioni from './informazioni';
 import chart from './chart';
 import mappa from './mappa';
 
+
 // crossfilter data management
 let cf; // crossfilter instance
 let dregione;
-let dprof;
-let dquota;
+// let dprof;
+// let dquota;
 
 export default {
   name: 'dashboard',
@@ -176,22 +179,22 @@ export default {
   data() {
     return {
       sliderprof: {
-        valore: 4000,
-        max: '',
+        valore: Function,
+        max: Function,
       },
       sliderquota: {
-        valore: 4000,
-        min: '',
-        max: '',
+        valore: Function,
+        min: Function,
+        max: Function,
       },
       reports: [],
       selettore: {
-        selected: 'top',
-        options: [],
+        selected: String,
+        options: Array,
       },
       regione: {
-        selected: 'TUTTI',
-        options: ['TUTTI'],
+        selected: 'TUTTE',
+        options: [],
       },
       tabella: {
         selectMode: 'multi',
@@ -272,35 +275,43 @@ export default {
           posizione: d.posizione,
           stato: d.stato,
         }));
+
+
         cf = crossfilter(this.reports);
         dregione = cf.dimension(d => d.regione);
-        dprof = cf.dimension(d => d.prof);
-        dquota = cf.dimension(d => d.quota);
+        // dprof = cf.dimension(d => d.prof);
+        // dquota = cf.dimension(d => d.quota);
 
-        dprof.filter([0, this.sliderprof.valore]);
+        this.sliderprof.valore = d3.max(this.reports, d => d.prof);
+        this.sliderquota.valore = d3.max(this.reports, d => d.quota);
+        this.sliderprof.max = d3.max(this.reports, d => d.prof);
+        this.sliderquota.max = d3.max(this.reports, d => d.quota);
+        this.sliderquota.min = d3.min(this.reports, d => d.quota);
         this.regione.options = ['TUTTE'].concat(dregione.group().reduceCount().all().map(v => v.key));
         this.regione.selected = this.regione.options[0];
         this.selettore.options = ['PROFONDITA', 'TEMPERATURA', 'LITOLOGIA'];
         this.selettore.selected = this.selettore.options[0];
-        this.refreshCounters();
         this.refreshTable();
       });
   },
   computed: {
     filtered() {
-      const filtered = this.tabella.gruppo.filter(item => Object.keys(this.filters).every(key =>
-        String(item[key]).includes(this.filters[key])));
+      const filtered = this.tabella.gruppo.filter(item => Object.keys(this.filters)
+        .every(key =>
+          String(item[key])
+            .includes(this.filters[key])));
       return filtered.length > 0 ? filtered : [{
         nome: '',
         quota: '',
         prof: '',
       }];
     },
+    numberofrecords() {
+      return this.filtered.length;
+    },
   },
   methods: {
-    refreshCounters() {
-      this.numRecords = cf.groupAll().reduceCount().value();
-    },
+
     refreshTable() {
       if (this.regione.selected === 'TUTTE') {
         this.tabella.gruppo = this.reports.filter(selected =>
@@ -362,7 +373,6 @@ export default {
         } else {
           dregione.filter(newVal.selected);
         }
-        this.refreshCounters();
         this.refreshTable();
       },
       deep: true, // force watching within properties
@@ -372,7 +382,6 @@ export default {
         if (newVal !== oldVal) {
           this.sliderprof.valore = newVal;
         }
-        this.refreshCounters();
         this.refreshTable();
       },
       deep: true, // force watching within properties
@@ -381,9 +390,7 @@ export default {
       handler(newVal, oldVal) {
         if (newVal !== oldVal) {
           this.sliderquota.valore = newVal;
-          dquota.filter([0, newVal]);
         }
-        this.refreshCounters();
         this.refreshTable();
       },
       deep: true, // force watching within properties
