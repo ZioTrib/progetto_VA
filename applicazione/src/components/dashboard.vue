@@ -289,7 +289,7 @@ export default {
         this.sliderquota.min = d3.min(this.reports, d => d.quota);
         this.regione.options = ['TUTTE'].concat(dregione.group().reduceCount().all().map(v => v.key));
         this.regione.selected = this.regione.options[0];
-        this.selettore.options = ['PROFONDITA', 'TEMPERATURA', 'LITOLOGIA'];
+        this.selettore.options = ['PROFONDITA', 'LOCALIZZAZIONE', 'LITOLOGIA'];
         this.selettore.selected = this.selettore.options[0];
         this.refreshTable();
       });
@@ -337,11 +337,16 @@ export default {
         uso: v.uso,
         tipo: v.tipo,
         prof: v.prof,
-        text: [
+        geoinfo: [
           `Nome:${v.nome}`,
           `Regione:${v.regione}`,
           `Provincia:${v.provincia}`,
-          `proprietario:${v.proprietar}`,
+          `Località:${v.entitam}`,
+        ],
+        profinfo: [
+          `Nome:${v.nome}`,
+          `Profondità:${v.prof}`,
+          `Quota:${v.quota}`,
         ],
         nome: v.nome,
         quota: v.quota,

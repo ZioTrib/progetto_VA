@@ -14,9 +14,18 @@ export default {
     datimappa: Array,
     selettore: String,
   },
-
   data() {
     const scl = [
+      [0, 'rgb(100,18,32)'],
+      [0.125, 'rgb(110,20,35)'],
+      [0.25, 'rgb(133,24,42)'],
+      [0.375, 'rgb(161,29,51)'],
+      [0.5, 'rgb(167,30,52)'],
+      [0.625, 'rgb(178,30,53)'],
+      [0.75, 'rgb(189,31,54)'],
+      [0.875, 'rgb(199,31,55)'],
+      [1, 'rgb(218,30,55)']];
+    /* const scala = [
       [0, 'rgb(150,0,90)'],
       [0.125, 'rgb(0, 0, 200)'],
       [0.25, 'rgb(0, 25, 255)'],
@@ -25,11 +34,12 @@ export default {
       [0.625, 'rgb(151, 255, 0)'],
       [0.75, 'rgb(255, 234, 0)'],
       [0.875, 'rgb(255, 111, 0)'],
-      [1, 'rgb(255, 0, 0)']];
+      [1, 'rgb(255, 0, 0)']]; */
     return {
       data: [
         {
           type: 'scattermapbox',
+          name: [],
           text: [],
           lat: [],
           lon: [],
@@ -50,7 +60,7 @@ export default {
             size: 8,
             colorscale: scl,
             cmin: 0,
-            reversescale: false,
+            reversescale: true,
             opacity: 0.7,
             colorbar: {
               ticksuffix: ' metri',
@@ -75,9 +85,12 @@ export default {
       this.data[0].lon = datum.map(d => d.lon);
       this.data[0].lat = datum.map(d => d.lat);
       if (this.selettore === 'PROFONDITA') {
-        this.data[0].text = 'ok';
-      } else {
-        this.data[0].text = datum.map(d => d.text);
+        this.data[0].text = datum.map(d => d.profinfo);
+        this.data[0].marker.color = datum.map(d => d.prof);
+      } else if (this.selettore === 'LOCALIZZAZIONE') {
+        this.data[0].text = datum.map(d => d.geoinfo);
+        this.data[0].marker.color = datum.map(d => d.prof);
+        this.data[0].nome = datum.map(d => d.regione);
       }
       this.data[0].marker.color = datum.map(d => d.prof);
       this.data[0].key = datum.map(d => d.key);
@@ -92,24 +105,6 @@ export default {
       this.data[0].uso = datum.map(d => d.uso);
       this.data[0].posizione = datum.map(d => d.posizione);
       this.data[0].stato = datum.map(d => d.stato);
-      this.$refs.Plotly.$on('click', (d) => {
-        /* eslint-disable */
-        alert(
-          `Nome:\n${d.points[0].data.nome[d.points[0].pointNumber]
-          }\n\nLatitudine:\n${d.points[0].data.lat[d.points[0].pointNumber]
-          }\n\nLongitudine:\n${d.points[0].data.lon[d.points[0].pointNumber]
-          }\n\nRegione:\n${d.points[0].data.regione[d.points[0].pointNumber]
-          }\n\nProvincia:\n${d.points[0].data.provincia[d.points[0].pointNumber]
-          }\n\nPosizione:\n${d.points[0].data.posizione[d.points[0].pointNumber]
-          }\n\nProprietario:\n${d.points[0].data.proprietario[d.points[0].pointNumber]
-          }\n\nData:\n${d.points[0].data.datacomp[d.points[0].pointNumber]
-          }\n\nEsito:\n${d.points[0].data.esito[d.points[0].pointNumber]
-          }\n\nScopo:\n${d.points[0].data.scopo[d.points[0].pointNumber]
-          }\n\nTipo:\n${d.points[0].data.tipo[d.points[0].pointNumber]
-          }\n\nUso:\n${d.points[0].data.uso[d.points[0].pointNumber]
-          }\n\nStato:\n${d.points[0].data.stato[d.points[0].pointNumber]}`,
-        );
-      });
     },
     selettore(newVal, oldVal) {
       if (newVal !== oldVal) {
