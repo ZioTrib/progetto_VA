@@ -136,8 +136,17 @@
         </b-collapse>
       <b-collapse  id="temperatura" class="m-1">
         <b-card>
+          <h3> Temperatura </h3>
           <b-row>
             <b-col>
+            </b-col>
+            <b-col>
+              <div>
+                <b-form-select
+                  v-model="pozzo_temp.selected"
+                  :options="pozzo_temp.options"></b-form-select>
+                <div class="mt-3">Selected: <strong>{{ pozzo_temp.selected }}</strong></div>
+              </div>
             </b-col>
           </b-row>
         </b-card>
@@ -188,6 +197,8 @@ export default {
         max: Function,
       },
       reports: [],
+      reports_temp: [],
+      filtro: [],
       selettore: {
         selected: String,
         options: Array,
@@ -195,6 +206,10 @@ export default {
       regione: {
         selected: 'TUTTE',
         options: [],
+      },
+      pozzo_temp: {
+        selected: String,
+        options: Array,
       },
       tabella: {
         selectMode: 'multi',
@@ -293,6 +308,16 @@ export default {
         this.selettore.selected = this.selettore.options[0];
         this.refreshTable();
       });
+    fetch('static/data/pozzi_temp.json')
+      .then(res => res.json())
+      .then((out) => {
+        this.reports_temp = out.map(d => ({
+          tprof: +d.prof,
+          ttemp: +d.temp,
+          tkey: +d.key,
+          tnome: d.nome,
+        }));
+      });
   },
   computed: {
     filtered() {
@@ -322,6 +347,7 @@ export default {
           selected.prof <= this.sliderprof.valore &&
           selected.quota <= this.sliderquota.valore);
       }
+      this.filtro = this.reports_temp.filter(d => d.tkey === 928368);
     },
 
     onRowSelected(items) {
@@ -362,6 +388,11 @@ export default {
         stato: v.stato,
       }));
       this.tabella.selezionati = this.selectedTable.length;
+      this.datitemp_selettore = this.selectedTable.map(v => ({
+        nome: v.nome,
+      }));
+      this.pozzo_temp.options = this.datitemp_selettore.map(d => d.nome);
+      this.pozzo_temp.selected = this.pozzo_temp.options[0];
     },
     selectAllRows() {
       this.$refs.selectableTable.selectAllRows();

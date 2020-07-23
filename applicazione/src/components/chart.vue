@@ -40,10 +40,10 @@ export default {
         dragmode: 'pan',
         scrollZoom: true,
         xaxis: {
+          range: [2, 15],
           title: 'nomi pozzi',
           type: 'category',
           base: 0,
-          rangeslider: {},
         },
         yaxis: {
           title: 'profondità / quota',
