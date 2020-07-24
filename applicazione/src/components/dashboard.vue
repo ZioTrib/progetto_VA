@@ -139,6 +139,7 @@
           <h3> Temperatura </h3>
           <b-row>
             <b-col>
+              <scattertemp :aggregation_scatter="scatter.temperature"></scattertemp>
             </b-col>
             <b-col>
               <div>
@@ -170,17 +171,22 @@ import crossfilter from 'crossfilter';
 import informazioni from './informazioni';
 import chart from './chart';
 import mappa from './mappa';
+import Scattertemp from './scattertemp';
 
 
 // crossfilter data management
 let cf; // crossfilter instance
+// eslint-disable-next-line camelcase
+let cf_temp;
 let dregione;
+let dtnome;
 // let dprof;
 // let dquota;
 
 export default {
   name: 'dashboard',
   components: {
+    Scattertemp,
     informazioni,
     chart,
     mappa,
@@ -255,15 +261,17 @@ export default {
         ],
         selezionati: 0,
       },
-      numRecords: 0,
-      datimappa: [],
-      chart: {
-        profalt: [],
-      },
       filters: {
         nome: '',
         quota: '',
         prof: '',
+      },
+      datimappa: [],
+      chart: {
+        profalt: [],
+      },
+      scatter: {
+        temperature: [],
       },
     };
   },
@@ -317,6 +325,10 @@ export default {
           tkey: +d.key,
           tnome: d.nome,
         }));
+        // eslint-disable-next-line camelcase
+        cf_temp = crossfilter(this.reports_temp);
+        dtnome = cf_temp.dimension(d => d.tnome);
+        this.filtro = dtnome.filter(this.pozzo_temp.selected);
       });
   },
   computed: {
@@ -347,10 +359,15 @@ export default {
           selected.prof <= this.sliderprof.valore &&
           selected.quota <= this.sliderquota.valore);
       }
-      this.filtro = this.reports_temp.filter(d => d.tkey === 928368);
     },
 
     onRowSelected(items) {
+      this.filtro = this.reports_temp.filter(d => d.tnome === this.pozzo_temp.selected);
+      this.scatter.temperature = this.filtro.map(v => ({
+        nome: v.tnome,
+        temp: +v.ttemp,
+        prof: +v.tprof,
+      }));
       this.selectedTable = items;
       this.chart.profalt = this.selectedTable.map(v => ({
         key: v.nome,
@@ -402,6 +419,14 @@ export default {
     },
   },
   watch: {
+    pozzo_temp: {
+      handler(newVal) {
+        dtnome.filter(newVal.selected);
+        this.onRowSelected();
+      },
+      deep: true, // force watching within properties
+    },
+
     regione: {
       handler(newVal) {
         if (newVal.selected === 'TUTTE') {
