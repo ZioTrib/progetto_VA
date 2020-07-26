@@ -156,6 +156,7 @@
         <b-card>
           <b-row>
             <b-col>
+              <div id="app"><highcharts /></div>
             </b-col>
           </b-row>
         </b-card>
@@ -171,7 +172,8 @@ import crossfilter from 'crossfilter';
 import informazioni from './informazioni';
 import chart from './chart';
 import mappa from './mappa';
-import Scattertemp from './scattertemp';
+import scattertemp from './scattertemp';
+import barlito from './barlito';
 
 
 // crossfilter data management
@@ -186,10 +188,11 @@ let dtnome;
 export default {
   name: 'dashboard',
   components: {
-    Scattertemp,
+    scattertemp,
     informazioni,
     chart,
     mappa,
+    highcharts: barlito,
   },
   data() {
     return {
@@ -204,7 +207,7 @@ export default {
       },
       reports: [],
       reports_temp: [],
-      filtro: [],
+      filtro_temperature: [],
       selettore: {
         selected: String,
         options: Array,
@@ -220,7 +223,7 @@ export default {
       tabella: {
         selectMode: 'multi',
         modes: ['multi', 'single'],
-        gruppo: [],
+        rowSelected: [],
         fields: [
           'selezionato',
           {
@@ -328,12 +331,12 @@ export default {
         // eslint-disable-next-line camelcase
         cf_temp = crossfilter(this.reports_temp);
         dtnome = cf_temp.dimension(d => d.tnome);
-        this.filtro = dtnome.filter(this.pozzo_temp.selected);
+        this.filtro_temperature = dtnome.filter(this.pozzo_temp.selected);
       });
   },
   computed: {
     filtered() {
-      const filtered = this.tabella.gruppo.filter(item => Object.keys(this.filters)
+      const filtered = this.tabella.rowSelected.filter(item => Object.keys(this.filters)
         .every(key =>
           String(item[key])
             .includes(this.filters[key])));
@@ -351,10 +354,10 @@ export default {
 
     refreshTable() {
       if (this.regione.selected === 'TUTTE') {
-        this.tabella.gruppo = this.reports.filter(selected =>
+        this.tabella.rowSelected = this.reports.filter(selected =>
           selected.prof <= this.sliderprof.valore);
       } else {
-        this.tabella.gruppo = this.reports.filter(selected =>
+        this.tabella.rowSelected = this.reports.filter(selected =>
           selected.regione === this.regione.selected &&
           selected.prof <= this.sliderprof.valore &&
           selected.quota <= this.sliderquota.valore);
@@ -362,8 +365,8 @@ export default {
     },
 
     onRowSelected(items) {
-      this.filtro = this.reports_temp.filter(d => d.tnome === this.pozzo_temp.selected);
-      this.scatter.temperature = this.filtro.map(v => ({
+      this.filtro_temperature = this.reports_temp.filter(d => d.tnome === this.pozzo_temp.selected);
+      this.scatter.temperature = this.filtro_temperature.map(v => ({
         nome: v.tnome,
         temp: +v.ttemp,
         prof: +v.tprof,
