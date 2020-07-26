@@ -156,8 +156,17 @@
         <b-card>
           <b-row>
             <b-col>
-              <div id="app"><highcharts /></div>
+              <div><highcharts :aggregation_bar="bar.litologia"/></div>
             </b-col>
+            <b-col>
+              <div>
+                <b-form-select
+                  v-model="pozzo_lito.selected"
+                  :options="pozzo_lito.options"></b-form-select>
+                <div class="mt-3">Selected: <strong>{{ pozzo_lito.selected }}</strong></div>
+              </div>
+            </b-col>
+
           </b-row>
         </b-card>
       </b-collapse>
@@ -180,10 +189,11 @@ import barlito from './barlito';
 let cf; // crossfilter instance
 // eslint-disable-next-line camelcase
 let cf_temp;
+// eslint-disable-next-line camelcase
+let cf_lito;
 let dregione;
 let dtnome;
-// let dprof;
-// let dquota;
+let dlitonome;
 
 export default {
   name: 'dashboard',
@@ -207,7 +217,10 @@ export default {
       },
       reports: [],
       reports_temp: [],
+      reports_litstr: [],
       filtro_temperature: [],
+      filtro_litologia: [],
+
       selettore: {
         selected: String,
         options: Array,
@@ -217,6 +230,10 @@ export default {
         options: [],
       },
       pozzo_temp: {
+        selected: String,
+        options: Array,
+      },
+      pozzo_lito: {
         selected: String,
         options: Array,
       },
@@ -276,6 +293,9 @@ export default {
       scatter: {
         temperature: [],
       },
+      bar: {
+        litologia: [],
+      },
     };
   },
   mounted() {
@@ -333,6 +353,19 @@ export default {
         dtnome = cf_temp.dimension(d => d.tnome);
         this.filtro_temperature = dtnome.filter(this.pozzo_temp.selected);
       });
+    fetch('static/data/pozzi_litstr.json')
+      .then(res => res.json())
+      .then((out) => {
+        this.reports_litstr = out.map(d => ({
+          prof: +d.aprof,
+          lito: d.litologia,
+          nomepozzo: d.nome,
+        }));
+        // eslint-disable-next-line camelcase
+        cf_lito = crossfilter(this.reports_litstr);
+        dlitonome = cf_lito.dimension(d => d.nomepozzo);
+        this.filtro_litologia = dlitonome.filter(this.pozzo_lito.selected);
+      });
   },
   computed: {
     filtered() {
@@ -371,6 +404,13 @@ export default {
         temp: +v.ttemp,
         prof: +v.tprof,
       }));
+      this.filtro_litologia = this.reports_litstr.filter(d =>
+        d.nomepozzo === this.pozzo_lito.selected);
+      this.bar.litologia = this.filtro_litologia.map(v => ({
+        x: 0,
+        y: +v.prof,
+        name: v.lito,
+      }));
       this.selectedTable = items;
       this.chart.profalt = this.selectedTable.map(v => ({
         key: v.nome,
@@ -408,11 +448,13 @@ export default {
         stato: v.stato,
       }));
       this.tabella.selezionati = this.selectedTable.length;
-      this.datitemp_selettore = this.selectedTable.map(v => ({
+      this.nome_selettore = this.selectedTable.map(v => ({
         nome: v.nome,
       }));
-      this.pozzo_temp.options = this.datitemp_selettore.map(d => d.nome);
+      this.pozzo_temp.options = this.nome_selettore.map(d => d.nome);
       this.pozzo_temp.selected = this.pozzo_temp.options[0];
+      this.pozzo_lito.options = this.nome_selettore.map(d => d.nome);
+      this.pozzo_lito.selected = this.pozzo_lito.options[0];
     },
     selectAllRows() {
       this.$refs.selectableTable.selectAllRows();
@@ -423,6 +465,13 @@ export default {
   },
   watch: {
     pozzo_temp: {
+      handler(newVal) {
+        dlitonome.filter(newVal.selected);
+        this.onRowSelected();
+      },
+      deep: true, // force watching within properties
+    },
+    pozzo_lito: {
       handler(newVal) {
         dtnome.filter(newVal.selected);
         this.onRowSelected();
