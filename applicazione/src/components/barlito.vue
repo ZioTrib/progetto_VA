@@ -106,9 +106,6 @@ export default {
   },
   mounted() {
     this.$children[0].chart.vueRef = this;
-  },
-  watch: {
-    concat():
     this.chartOptions.series[0].data = [
       { x: 0, y: 135, name: 'TUFI ED ARGILLE' },
       { x: 0, y: 746, name: 'ARGILLE E SABBIE' },
@@ -116,6 +113,11 @@ export default {
       { x: 0, y: 600, name: 'nuovo' }];
     /* eslint-disable */
     console.log(this.chartOptions.series[0].data);
+  },
+  watch: {
+    Aggregation_scatter(datum) {
+      this.data[0].y = datum.map(d => d.prof);
+      this.data[0].marker.color = datum.map(d => d.temp);
     },
   },
 };
