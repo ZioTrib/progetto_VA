@@ -129,7 +129,7 @@
       <b-collapse  id="prof" class="m-1">
           <b-card>
             <h3> quota e profondità pozzi </h3>
-              <div style="height:500px; background-color: beige">
+              <div>
                 <chart :Aggregation="chart.profalt"></chart>
               </div>
             </b-card>
@@ -166,7 +166,6 @@
                 <div class="mt-3">Selected: <strong>{{ pozzo_lito.selected }}</strong></div>
               </div>
             </b-col>
-
           </b-row>
         </b-card>
       </b-collapse>
@@ -388,7 +387,8 @@ export default {
     refreshTable() {
       if (this.regione.selected === 'TUTTE') {
         this.tabella.rowSelected = this.reports.filter(selected =>
-          selected.prof <= this.sliderprof.valore);
+          selected.prof <= this.sliderprof.valore &&
+          selected.prof <= this.sliderquota.valore);
       } else {
         this.tabella.rowSelected = this.reports.filter(selected =>
           selected.regione === this.regione.selected &&

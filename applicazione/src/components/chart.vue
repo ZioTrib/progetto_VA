@@ -35,17 +35,30 @@ export default {
     return {
       data: [trace1, trace2],
       layout: {
+        height: 600,
         autosize: true,
         barmode: 'stack',
         dragmode: 'pan',
         scrollZoom: true,
         xaxis: {
-          range: [2, 15],
+          tickangle: 45,
+          showgrid: false,
+          zeroline: false,
+          showline: false,
+          autotick: true,
+          range: [1, 15],
           title: 'nomi pozzi',
           type: 'category',
+          rangeslider: {
+          },
           base: 0,
         },
         yaxis: {
+          showgrid: false,
+          zeroline: true,
+          showline: false,
+          autotick: true,
+          fixedrange: true,
           title: 'profondità / quota',
         },
       },
