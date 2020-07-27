@@ -16,15 +16,15 @@ export default {
   },
   data() {
     const scl = [
-      [0, 'rgb(100,18,32)'],
-      [0.125, 'rgb(110,20,35)'],
-      [0.25, 'rgb(133,24,42)'],
-      [0.375, 'rgb(161,29,51)'],
-      [0.5, 'rgb(167,30,52)'],
-      [0.625, 'rgb(178,30,53)'],
-      [0.75, 'rgb(189,31,54)'],
-      [0.875, 'rgb(199,31,55)'],
-      [1, 'rgb(218,30,55)']];
+      [0, '#d1f3ff'],
+      [0.125, '#acddf3'],
+      [0.25, '#88c6e9'],
+      [0.375, '#66afdf'],
+      [0.5, '#4597d5'],
+      [0.625, '#2380ca'],
+      [0.75, '#0067bd'],
+      [0.875, '#004fad'],
+      [1, '#00359b']];
     /* const scala = [
       [0, 'rgb(150,0,90)'],
       [0.125, 'rgb(0, 0, 200)'],
@@ -60,9 +60,15 @@ export default {
             size: 8,
             colorscale: scl,
             cmin: 0,
-            reversescale: true,
+            reversescale: false,
             opacity: 0.7,
             colorbar: {
+              thickness: 10,
+              titleside: 'right',
+              outlinecolor: 'rgba(68,68,68,0)',
+              ticks: 'outside',
+              ticklen: 3,
+              shoticksuffix: 'last',
               ticksuffix: ' metri',
             },
           },
@@ -72,7 +78,7 @@ export default {
         colorbar: true,
         autosize: true,
         dragmode: 'zoom',
-        mapbox: { style: 'stamen-terrain', center: { lat: 43, lon: 10 }, zoom: 4 },
+        mapbox: { style: 'carto-darkmatter', center: { lat: 42, lon: 11.8 }, zoom: 4.35 },
         margin: { r: 0, t: 0, b: 0, l: 0 },
       },
       config: {

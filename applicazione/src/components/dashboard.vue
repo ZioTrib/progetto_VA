@@ -97,13 +97,13 @@
         <b-card>
           <b-row class="text-center">
             <b-col>
-              <div style="height:475px; background-color: beige">
+              <div style="height:460px">
                 <mappa :datimappa="datimappa" :selettore = "selettore.selected"></mappa>
               </div>
             </b-col>
           </b-row>
           <b-button v-b-toggle.collapse-1-inner size="sm">visualizzazione</b-button>
-          <b-collapse id="collapse-1-inner" class="mt-1">
+          <b-collapse id="collapse-1-inner" class="mt-2">
             <b-card>
               <b-row>
                 <b-col>
@@ -383,7 +383,6 @@ export default {
     },
   },
   methods: {
-
     refreshTable() {
       if (this.regione.selected === 'TUTTE') {
         this.tabella.rowSelected = this.reports.filter(selected =>
