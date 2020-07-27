@@ -388,7 +388,8 @@ export default {
       if (this.regione.selected === 'TUTTE') {
         this.tabella.rowSelected = this.reports.filter(selected =>
           selected.prof <= this.sliderprof.valore &&
-          selected.prof <= this.sliderquota.valore);
+          selected.prof <= this.sliderquota.valore,
+        );
       } else {
         this.tabella.rowSelected = this.reports.filter(selected =>
           selected.regione === this.regione.selected &&
