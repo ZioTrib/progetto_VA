@@ -1,9 +1,9 @@
 <template>
-  <b-container class="dashboard">
+  <b-container class="dashboard bg-dark">
     <div>
       <b-button v-b-toggle.elencopozzi variant="primary" class="m-1">Elenco dei pozzi</b-button>
       <b-collapse  visible id="elencopozzi" class="m-1">
-        <b-card >
+        <b-card bg-variant="light">
           <b-row>
             <b-col lg="6" class="my-1">
               <div>
@@ -38,18 +38,22 @@
             </b-col>
             <b-col lg="3">
                 <b-card
-                  bg-variant="secondary"
+                  border-variant="primary"
+                  header-bg-variant="primary"
+                  header-text-variant="white"
+                  align="center"
                   header="NUMERO DI POZZI"
-                  text-variant="white"
                   class="text-center">
                   <b-card-text> <h2>{{ numberofrecords }}</h2>  </b-card-text>
                 </b-card>
             </b-col>
             <b-col lg="3">
               <b-card
-                bg-variant="secondary"
+                border-variant="primary"
+                header-bg-variant="primary"
+                header-text-variant="white"
+                align="center"
                 header="POZZI SELEZIONATI"
-                text-variant="white"
                 class="text-center">
                 <b-card-text> <h2>{{ tabella.selezionati }}</h2>  </b-card-text>
               </b-card>
@@ -115,7 +119,7 @@
     <div>
       <b-button v-b-toggle.mappa variant="primary" class="m-1"> Mappa dei pozzi in Italia</b-button>
       <b-collapse id="mappa" class="mt-1">
-        <b-card>
+        <b-card bg-variant="light">
           <b-row class="text-center">
             <b-col>
               <div style="height:460px">
@@ -148,7 +152,7 @@
       <b-button v-b-toggle.temperatura variant="primary" class="m-1">Temperatura</b-button>
       <b-button v-b-toggle.litologia variant="primary" class="m-1">Litologia</b-button>
       <b-collapse  id="prof" class="m-1">
-          <b-card>
+          <b-card bg-variant="light">
             <h3> quota e profondità pozzi </h3>
               <div>
                 <chart :Aggregation="chart.profalt"></chart>
@@ -156,7 +160,7 @@
             </b-card>
         </b-collapse>
       <b-collapse  id="temperatura" class="m-1">
-        <b-card>
+        <b-card bg-variant="light">
           <h3> Temperatura </h3>
           <b-row>
             <b-col>
@@ -174,7 +178,7 @@
         </b-card>
       </b-collapse>
       <b-collapse  id="litologia" class="m-1">
-        <b-card>
+        <b-card bg-variant="light">
           <b-row>
             <b-col>
               <div><highcharts :aggregation_bar="bar.litologia"/></div>
