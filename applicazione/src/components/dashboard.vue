@@ -3,19 +3,15 @@
     <div>
       <b-button v-b-toggle.elencopozzi variant="primary" class="m-1">Elenco dei pozzi</b-button>
       <b-collapse  visible id="elencopozzi" class="m-1">
-        <b-card>
+        <b-card >
           <b-row>
             <b-col lg="6" class="my-1">
-              <b-form-group label="Tipo di Selezione:" label-cols-md="4">
-                <b-form-select
-                  v-model="tabella.selectMode" :options="tabella.modes">
-                </b-form-select>
-              </b-form-group>
               <div>
+                <b-form-group label="Regione Selezionata:" label-cols-md="4">
                 <b-form-select
                   v-model="regione.selected"
                   :options="regione.options"></b-form-select>
-                <div class="mt-3">Selected: <strong>{{ regione.selected }}</strong></div>
+                </b-form-group>
               </div>
               <div>
                 <b-form-input
@@ -26,7 +22,7 @@
                   :max= "sliderprof.max"
                   step="0.5">
                 </b-form-input>
-                <div class="mt-2">Value: {{ sliderprof.valore }}</div>
+                <div class="mt-2">profondità massima: {{ sliderprof.valore }}</div>
               </div>
               <div>
                 <b-form-input
@@ -37,21 +33,26 @@
                   :max="sliderquota.max"
                   step="0.5">
                 </b-form-input>
-                <div class="mt-2">Value: {{ sliderquota.valore }}</div>
+                <div class="mt-2"> quota massima: {{ sliderquota.valore }}</div>
               </div>
             </b-col>
             <b-col lg="3">
-              <div style="height:200px; background-color: beige">
-                <informazioni
-                  measure = "Numero di pozzi: " :value = "numberofrecords" ></informazioni>
-              </div>
+                <b-card
+                  bg-variant="secondary"
+                  header="NUMERO DI POZZI"
+                  text-variant="white"
+                  class="text-center">
+                  <b-card-text> <h2>{{ numberofrecords }}</h2>  </b-card-text>
+                </b-card>
             </b-col>
             <b-col lg="3">
-              <div style="height:200px; background-color: beige">
-                <informazioni
-                  measure="Numero di pozzi selezionati: "
-                  :value = "tabella.selezionati"></informazioni>
-              </div>
+              <b-card
+                bg-variant="secondary"
+                header="POZZI SELEZIONATI"
+                text-variant="white"
+                class="text-center">
+                <b-card-text> <h2>{{ tabella.selezionati }}</h2>  </b-card-text>
+              </b-card>
             </b-col>
           </b-row>
           <b-row>
@@ -82,10 +83,30 @@
                   </template>
                 </template>
               </b-table>
-              <p>
-                <b-button size="sm" @click="selectAllRows">Seleziona Tutto</b-button>
-                <b-button size="sm" @click="clearSelected">Deseleziona Tutto</b-button>
-              </p>
+              <b-row class="mb-2">
+                <b-col sm="3">
+                <b-form-group
+                  label-cols-sm="6"
+                  label-align-sm="right"
+                  label-size="sm"
+                  class="mb-0"
+                  label="Tipo di Selezione: ">
+                  <b-form-select
+                    v-model="tabella.selectMode" :options="tabella.modes">
+                  </b-form-select>
+                </b-form-group>
+                </b-col>
+              </b-row>
+              <b-row>
+                <b-col>
+                <b-button size="sm" @click="selectAllRows">Seleziona Tutto
+                  <b-badge variant="light"> {{ numberofrecords }}</b-badge>
+                </b-button>
+                <b-button size="sm" @click="clearSelected">Deseleziona Tutto
+                  <b-badge variant="light"> {{ tabella.selezionati }}</b-badge>
+                </b-button>
+                </b-col>
+              </b-row>
             </b-col>
           </b-row>
         </b-card>
