@@ -379,7 +379,7 @@ export default {
       }];
     },
     numberofrecords() {
-      return this.filtered.length;
+      return this.tabella.rowSelected.length;
     },
   },
   methods: {
