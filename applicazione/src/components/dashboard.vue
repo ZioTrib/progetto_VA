@@ -62,6 +62,10 @@
           <b-row>
             <b-col>
               <b-table
+                selected-variant="primary"
+                head-variant="dark"
+                table-variant="light"
+                hover
                 selectable
                 :select-mode="tabella.selectMode"
                 @row-selected="onRowSelected"
@@ -70,7 +74,7 @@
                 :fields="tabella.fields"
                 class='tabella'
                 ref="selectableTable"
-                striped show-empty :items="filtered">
+                show-empty :items="filtered">
                 <template slot="top-row" slot-scope="{ fields }">
                   <td v-for="field in fields" :key="field.key">
                     <input v-model="filters[field.key]" :placeholder="field.label">
