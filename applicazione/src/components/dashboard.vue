@@ -127,13 +127,14 @@
               </div>
             </b-col>
           </b-row>
-          <b-button v-b-toggle.collapse-1-inner size="sm">visualizzazione</b-button>
+          <b-button v-b-toggle.collapse-1-inner size="sm">etichetta pozzo</b-button>
           <b-collapse id="collapse-1-inner" class="mt-2">
             <b-card>
               <b-row>
                 <b-col>
               <b-form-group>
               <b-form-checkbox-group
+                size="sm"
                 v-model="selettore.selected"
                 :options="selettore.options"
                 name="buttonsSelector"
@@ -359,7 +360,7 @@ export default {
         this.sliderquota.min = d3.min(this.reports, d => d.quota);
         this.regione.options = ['TUTTE'].concat(dregione.group().reduceCount().all().map(v => v.key));
         this.regione.selected = this.regione.options[0];
-        this.selettore.options = ['PROFONDITA', 'LOCALIZZAZIONE', 'LITOLOGIA'];
+        this.selettore.options = ['PROFONDITÀ/QUOTA', 'LOCALIZZAZIONE', 'PROPRIETARIO', 'CONDIZIONI'];
         this.selettore.selected = this.selettore.options[0];
         this.refreshTable();
       });
@@ -404,7 +405,10 @@ export default {
       }];
     },
     numberofrecords() {
-      return this.tabella.rowSelected.length;
+      if (this.tabella.rowSelected.length === 0) {
+        return 0;
+      }
+      return this.filtered.length;
     },
   },
   methods: {
@@ -445,7 +449,6 @@ export default {
       this.datimappa = this.selectedTable.map(v => ({
         lon: v.lon_wgs84,
         lat: v.lat_wgs84,
-        uso: v.uso,
         tipo: v.tipo,
         prof: v.prof,
         geoinfo: [
@@ -459,18 +462,24 @@ export default {
           `Profondità:${v.prof}`,
           `Quota:${v.quota}`,
         ],
-        nome: v.nome,
+        proprinfo: [
+          `Nome:${v.nome}`,
+          `Proprietario:${v.proprietar}`,
+        ],
+        condizioniinfo: [
+          `Nome:${v.nome}`,
+          `Esito:${v.esito}`,
+          `Stato:${v.stato}`,
+          `Uso:${v.uso}`,
+          // `Scopo:${v.scopo}`,
+          // `Tipo:${v.tipo}`,
+        ],
         quota: v.quota,
-        scopo: v.scopo,
         key: v.key,
         entitam: v.entitam,
         regione: v.regione,
         provincia: v.provincia,
-        proprietar: v.proprietar,
-        datacomp: v.datacomp,
-        esito: v.esito,
         posizione: v.posizione,
-        stato: v.stato,
       }));
       this.tabella.selezionati = this.selectedTable.length;
       this.nome_selettore = this.selectedTable.map(v => ({
