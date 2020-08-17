@@ -1,42 +1,45 @@
 <template>
-  <b-container class="dashboard bg-dark">
-    <div>
-      <b-button v-b-toggle.elencopozzi variant="primary" class="m-1">Elenco dei pozzi</b-button>
-      <b-collapse  visible id="elencopozzi" class="m-1">
-        <b-card bg-variant="light">
-          <b-row>
-            <b-col lg="6" class="my-1">
-              <div>
-                <b-form-group label="Regione Selezionata:" label-cols-md="4">
-                <b-form-select
-                  v-model="regione.selected"
-                  :options="regione.options"></b-form-select>
-                </b-form-group>
-              </div>
-              <div>
-                <b-form-input
-                  id="range-2"
-                  v-model="sliderprof.valore"
-                  type="range"
-                  min="0"
-                  :max= "sliderprof.max"
-                  step="0.5">
-                </b-form-input>
-                <div class="mt-2">profondità massima: {{ sliderprof.valore }}</div>
-              </div>
-              <div>
-                <b-form-input
-                  id="range-2"
-                  v-model="sliderquota.valore"
-                  type="range"
-                  :min="sliderquota.min"
-                  :max="sliderquota.max"
-                  step="0.5">
-                </b-form-input>
-                <div class="mt-2"> quota massima: {{ sliderquota.valore }}</div>
-              </div>
-            </b-col>
-            <b-col lg="3">
+  <b-container class="dashboard bg-dark" fluid>
+    <b-row>
+      <b-col cols="7">
+        <b-button v-b-toggle.elencopozzi variant="primary" class="m-1">Elenco dei pozzi</b-button>
+        <b-button v-b-toggle.mappa variant="primary"
+                  class="m-1"> Mappa dei pozzi in Italia</b-button>
+        <b-button v-b-toggle.profalt variant="primary"
+                  class="m-1">Profondità - altitudine</b-button>
+        <b-collapse  visible id="elencopozzi">
+          <b-card bg-variant="light">
+            <b-row>
+              <b-col lg="6" class="my-1">
+                <div>
+                  <b-form-group label="Regione Selezionata:" label-cols-md="4">
+                    <b-form-select
+                    v-model="regione.selected"
+                    :options="regione.options"></b-form-select>
+                  </b-form-group>
+                </div>
+                <div>
+                  <b-form-input
+                    id="range-2"
+                    v-model="sliderprof.valore"
+                    type="range"
+                    min="0"
+                    :max= "sliderprof.max"
+                    step="0.5"></b-form-input>
+                  <div class="mt-2">profondità massima: {{ sliderprof.valore }}</div>
+                </div>
+                <div>
+                  <b-form-input
+                    id="range-2"
+                    v-model="sliderquota.valore"
+                    type="range"
+                    :min="sliderquota.min"
+                    :max="sliderquota.max"
+                    step="0.5"></b-form-input>
+                  <div class="mt-2"> quota massima: {{ sliderquota.valore }}</div>
+                </div>
+              </b-col>
+              <b-col lg="3">
                 <b-card
                   border-variant="primary"
                   header-bg-variant="primary"
@@ -46,132 +49,117 @@
                   class="text-center">
                   <b-card-text> <h2>{{ numberofrecords }}</h2>  </b-card-text>
                 </b-card>
-            </b-col>
-            <b-col lg="3">
-              <b-card
-                border-variant="primary"
-                header-bg-variant="primary"
-                header-text-variant="white"
-                align="center"
-                header="POZZI SELEZIONATI"
-                class="text-center">
-                <b-card-text> <h2>{{ tabella.selezionati }}</h2>  </b-card-text>
-              </b-card>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <b-table
-                selected-variant="primary"
-                head-variant="dark"
-                table-variant="light"
-                hover
-                selectable
-                :select-mode="tabella.selectMode"
-                @row-selected="onRowSelected"
-                responsive="sm"
-                sticky-header
-                :fields="tabella.fields"
-                class='tabella'
-                ref="selectableTable"
-                show-empty :items="filtered">
-                <template slot="top-row" slot-scope="{ fields }">
-                  <td v-for="field in fields" :key="field.key">
-                    <input v-model="filters[field.key]" :placeholder="field.label">
-                  </td>
-                </template>
-                <template v-slot:cell(selezionato)="{ rowSelected }">
-                  <template v-if="rowSelected">
-                    <span aria-hidden="true">&check;</span>
-                    <span class="sr-only">Selected</span>
+              </b-col>
+              <b-col lg="3">
+                <b-card
+                  border-variant="primary"
+                  header-bg-variant="primary"
+                  header-text-variant="white"
+                  align="center"
+                  header="POZZI SELEZIONATI"
+                  class="text-center"><b-card-text> <h2>{{ tabella.selezionati }}</h2></b-card-text>
+                </b-card>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col>
+                <b-table
+                  selected-variant="primary"
+                  head-variant="dark"
+                  table-variant="light"
+                  hover
+                  selectable
+                  :select-mode="tabella.selectMode"
+                  @row-selected="onRowSelected"
+                  responsive="sm"
+                  sticky-header
+                  :fields="tabella.fields"
+                  class='tabella'
+                  ref="selectableTable"
+                  show-empty :items="filtered">
+                  <template slot="top-row" slot-scope="{ fields }">
+                    <td v-for="field in fields" :key="field.key">
+                      <input v-model="filters[field.key]" :placeholder="field.label">
+                    </td>
                   </template>
-                  <template v-else>
-                    <span aria-hidden="true">&nbsp;</span>
-                    <span class="sr-only">Not selected</span>
-                  </template>
-                </template>
-              </b-table>
-              <b-row class="mb-2">
-                <b-col sm="3">
-                <b-form-group
-                  label-cols-sm="6"
-                  label-align-sm="right"
-                  label-size="sm"
-                  class="mb-0"
-                  label="Tipo di Selezione: ">
-                  <b-form-select
-                    v-model="tabella.selectMode" :options="tabella.modes">
-                  </b-form-select>
-                </b-form-group>
-                </b-col>
-              </b-row>
-              <b-row>
-                <b-col>
-                <b-button size="sm" @click="selectAllRows">Seleziona Tutto
-                  <b-badge variant="light"> {{ numberofrecords }}</b-badge>
-                </b-button>
-                <b-button size="sm" @click="clearSelected">Deseleziona Tutto
-                  <b-badge variant="light"> {{ tabella.selezionati }}</b-badge>
-                </b-button>
-                </b-col>
-              </b-row>
-            </b-col>
-          </b-row>
-        </b-card>
-      </b-collapse>
-    </div>
-    <div>
-      <b-button v-b-toggle.mappa variant="primary" class="m-1"> Mappa dei pozzi in Italia</b-button>
-      <b-collapse id="mappa" class="mt-1">
-        <b-card bg-variant="light">
-          <b-row class="text-center">
-            <b-col>
-              <div style="height:460px">
-                <mappa :datimappa="datimappa" :selettore = "selettore.selected"></mappa>
-              </div>
-            </b-col>
-          </b-row>
-          <b-button v-b-toggle.collapse-1-inner size="sm">etichetta pozzo</b-button>
-          <b-collapse id="collapse-1-inner" class="mt-2">
-            <b-card>
-              <b-row>
-                <b-col>
-              <b-form-group>
-              <b-form-checkbox-group
-                size="sm"
-                v-model="selettore.selected"
-                :options="selettore.options"
-                name="buttonsSelector"
-                buttons
-              ></b-form-checkbox-group>
-            </b-form-group>
-                </b-col>
+                </b-table>
+                <b-row class="mb-2">
+                  <b-col sm="3">
+                    <b-form-group
+                      label-cols-sm="6"
+                      label-align-sm="right"
+                      label-size="sm"
+                      class="mb-0"
+                      label="Tipo di Selezione: ">
+                      <b-form-select
+                        v-model="tabella.selectMode" :options="tabella.modes">
+                      </b-form-select>
+                    </b-form-group>
+                  </b-col>
                 </b-row>
-            </b-card>
-          </b-collapse>
-        </b-card>
-      </b-collapse>
-    </div>
-    <div>
-    <b-button v-b-toggle.prof variant="primary" class="m-1">Profondità e Quota</b-button>
-      <b-button v-b-toggle.temperatura variant="primary" class="m-1">Temperatura</b-button>
-      <b-button v-b-toggle.litologia variant="primary" class="m-1">Litologia</b-button>
-      <b-collapse  id="prof" class="m-1">
-          <b-card bg-variant="light">
-            <h3> quota e profondità pozzi </h3>
-              <div>
-                <chart :Aggregation="chart.profalt"></chart>
-              </div>
-            </b-card>
+                <b-row>
+                  <b-col>
+                    <b-button size="sm" @click="selectAllRows">Seleziona Tutto
+                      <b-badge variant="light"> {{ numberofrecords }}</b-badge>
+                    </b-button>
+                    <b-button size="sm" @click="clearSelected">Deseleziona Tutto
+                      <b-badge variant="light"> {{ tabella.selezionati }}</b-badge>
+                    </b-button>
+                  </b-col>
+                </b-row>
+              </b-col>
+            </b-row>
+          </b-card>
         </b-collapse>
-      <b-collapse  id="temperatura" class="m-1">
+        <b-collapse id="mappa" class="mt-1">
+          <b-card bg-variant="light">
+            <b-row class="text-center">
+              <b-col>
+                <div style="height:460px">
+                  <mappa :datimappa="datimappa" :selettore = "selettore.selected"></mappa>
+              </div>
+            </b-col>
+          </b-row>
+            <b-button v-b-toggle.collapse-1-inner size="sm">etichetta pozzo</b-button>
+            <b-collapse id="collapse-1-inner" class="mt-2">
+              <b-card>
+                <b-row>
+                  <b-col>
+                    <b-form-group>
+                      <b-form-checkbox-group
+                        size="sm"
+                        v-model="selettore.selected"
+                        :options="selettore.options"
+                        name="buttonsSelector"
+                        buttons
+                      ></b-form-checkbox-group>
+                    </b-form-group>
+                  </b-col>
+                </b-row>
+              </b-card>
+            </b-collapse>
+          </b-card>
+        </b-collapse>
+        <b-collapse id="profalt" class="mt-1">
+        <b-card bg-variant="light">
+          <h3> quota e profondità pozzi </h3>
+          <div>
+            <b-col cols="12">
+            <chart :Aggregation="chart.profalt"></chart>
+            </b-col>
+          </div>
+        </b-card>
+        </b-collapse>
+      </b-col>
+      <b-col cols="5">
+        <h2>Grafici</h2>
         <b-card bg-variant="light">
           <h3> Temperatura </h3>
           <b-row>
             <b-col>
-              <scattertemp :aggregation_scatter="scatter.temperature"></scattertemp>
-            </b-col>
-            <b-col>
+              <div>
+                <scattertemp :aggregation_scatter="scatter.temperature"></scattertemp>
+              </div>
               <div>
                 <b-form-select
                   v-model="pozzo_temp.selected"
@@ -181,25 +169,28 @@
             </b-col>
           </b-row>
         </b-card>
-      </b-collapse>
-      <b-collapse  id="litologia" class="m-1">
-        <b-card bg-variant="light">
+        <b-card bg-variant="light" class="mt-1">
+          <h3> Litologia </h3>
           <b-row>
             <b-col>
-              <div><highcharts :aggregation_bar="bar.litologia"/></div>
-            </b-col>
-            <b-col>
               <div>
-                <b-form-select
-                  v-model="pozzo_lito.selected"
-                  :options="pozzo_lito.options"></b-form-select>
-                <div class="mt-3">Selected: <strong>{{ pozzo_lito.selected }}</strong></div>
+                <highcharts :aggregation_bar="bar.litologia"/>
               </div>
             </b-col>
           </b-row>
+          <b-row>
+          <b-col>
+            <div>
+              <b-form-select
+                v-model="pozzo_lito.selected"
+                :options="pozzo_lito.options"></b-form-select>
+              <div class="mt-3">Selected: <strong>{{ pozzo_lito.selected }}</strong></div>
+            </div>
+          </b-col>
+          </b-row>
         </b-card>
-      </b-collapse>
-    </div>
+      </b-col>
+    </b-row>
   </b-container>
 </template>
 
@@ -271,7 +262,6 @@ export default {
         modes: ['multi', 'single'],
         rowSelected: [],
         fields: [
-          'selezionato',
           {
             key: 'nome',
             label: 'Nome Pozzo',
