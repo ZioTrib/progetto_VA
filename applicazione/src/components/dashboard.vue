@@ -1,16 +1,20 @@
 <template>
+<!--DASHBOARD-->
   <b-container class="dashboard bg-dark" fluid>
     <b-row>
       <b-col cols="7">
+        <!--BUTTON FOR COLLAPSABLE ELEMENTS-->
         <b-button v-b-toggle.elencopozzi variant="primary" class="m-1">Elenco dei pozzi</b-button>
         <b-button v-b-toggle.mappa variant="primary"
                   class="m-1"> Mappa dei pozzi in Italia</b-button>
         <b-button v-b-toggle.profalt variant="primary"
                   class="m-1">Profondità - altitudine</b-button>
+        <!--START COLLAPSABLE CARDS SECTION-->
         <b-collapse  visible id="elencopozzi">
           <b-card bg-variant="light">
             <b-row>
               <b-col lg="6" class="my-1">
+                <!--SELECTOR FOR REGION-->
                 <div>
                   <b-form-group label="Regione Selezionata:" label-cols-md="4">
                     <b-form-select
@@ -18,6 +22,7 @@
                     :options="regione.options"></b-form-select>
                   </b-form-group>
                 </div>
+                <!--SLIDER PROF-->
                 <div>
                   <b-form-input
                     id="range-2"
@@ -28,6 +33,7 @@
                     step="0.5"></b-form-input>
                   <div class="mt-2">profondità massima: {{ sliderprof.valore }}</div>
                 </div>
+                <!--SLIDER QUOTA-->
                 <div>
                   <b-form-input
                     id="range-2"
@@ -39,6 +45,7 @@
                   <div class="mt-2"> quota massima: {{ sliderquota.valore }}</div>
                 </div>
               </b-col>
+              <!--COUNTERS-->
               <b-col lg="3">
                 <b-card
                   border-variant="primary"
@@ -63,6 +70,7 @@
             </b-row>
             <b-row>
               <b-col>
+                <!--START TABLE-->
                 <b-table
                   selected-variant="primary"
                   head-variant="dark"
@@ -97,6 +105,7 @@
                     </b-form-group>
                   </b-col>
                 </b-row>
+                <!--SELECTION BUTTONS-->
                 <b-row>
                   <b-col>
                     <b-button size="sm" @click="selectAllRows">Seleziona Tutto
@@ -111,15 +120,18 @@
             </b-row>
           </b-card>
         </b-collapse>
+        <!--MAP COLLAPSABLE CARD-->
         <b-collapse id="mappa" class="mt-1">
           <b-card bg-variant="light">
             <b-row class="text-center">
               <b-col>
                 <div style="height:460px">
+                  <!--MAP-->
                   <mappa :datimappa="datimappa" :selettore = "selettore.selected"></mappa>
               </div>
             </b-col>
           </b-row>
+            <!--WELL LABEL SELECTOR FOR MAP VISUALIZATION-->
             <b-button v-b-toggle.collapse-1-inner size="sm">etichetta pozzo</b-button>
             <b-collapse id="collapse-1-inner" class="mt-2">
               <b-card>
@@ -140,6 +152,7 @@
             </b-collapse>
           </b-card>
         </b-collapse>
+        <!--PROFA AND ALT BAR CHART-->
         <b-collapse id="profalt" class="mt-1">
         <b-card bg-variant="light">
           <h3> quota e profondità pozzi </h3>
@@ -152,15 +165,18 @@
         </b-collapse>
       </b-col>
       <b-col cols="5">
+        <!-- CHART RIGHT SIDE -->
         <h2>Grafici</h2>
         <b-card bg-variant="light">
           <h3> Temperatura </h3>
           <b-row>
             <b-col>
               <div>
+                <!-- SCATTER PLOT FOR TEMPERATURE -->
                 <scattertemp :aggregation_scatter="scatter.temperature"></scattertemp>
               </div>
               <div>
+                <!-- WELL SELECTOR -->
                 <b-form-select
                   v-model="pozzo_temp.selected"
                   :options="pozzo_temp.options"></b-form-select>
@@ -174,6 +190,7 @@
           <b-row>
             <b-col>
               <div>
+                <!-- SINGLE BAR PLOT FOR LITO -->
                 <highcharts :aggregation_bar="bar.litologia"/>
               </div>
             </b-col>
@@ -181,6 +198,7 @@
           <b-row>
           <b-col>
             <div>
+              <!-- WELL SELECTOR -->
               <b-form-select
                 v-model="pozzo_lito.selected"
                 :options="pozzo_lito.options"></b-form-select>
@@ -192,8 +210,8 @@
       </b-col>
     </b-row>
   </b-container>
+  <!--END DASHBOARD-->
 </template>
-
 
 <script>
 import * as d3 from 'd3';
@@ -204,13 +222,13 @@ import mappa from './mappa';
 import scattertemp from './scattertemp';
 import barlito from './barlito';
 
+// CROSSFILTER DATA MANAGEMENT
+// CROSSFILTER INSTANCES
+let cf;
+let cfTemp;
+let cfLito;
 
-// crossfilter data management
-let cf; // crossfilter instance
-// eslint-disable-next-line camelcase
-let cf_temp;
-// eslint-disable-next-line camelcase
-let cf_lito;
+// CROSSFILTER DIMENSIONS
 let dregione;
 let dtnome;
 let dlitonome;
@@ -226,37 +244,35 @@ export default {
   },
   data() {
     return {
-      sliderprof: {
-        valore: Function,
-        max: Function,
-      },
-      sliderquota: {
-        valore: Function,
-        min: Function,
-        max: Function,
-      },
       reports: [],
       reports_temp: [],
       reports_litstr: [],
       filtro_temperature: [],
       filtro_litologia: [],
 
-      selettore: {
-        selected: String,
-        options: Array,
-      },
+      // START REGION SELECTOR DATA
       regione: {
         selected: 'TUTTE',
         options: [],
       },
-      pozzo_temp: {
-        selected: String,
-        options: Array,
+      // END REGION SELECTOR DATA
+
+      // START SLIDERPROF DATA
+      sliderprof: {
+        valore: Function,
+        max: Function,
       },
-      pozzo_lito: {
-        selected: String,
-        options: Array,
+      // END SLIDERPROF DATA
+
+      // START SLIDERQUOTA DATA
+      sliderquota: {
+        valore: Function,
+        min: Function,
+        max: Function,
       },
+      // END SLIDERQUOTA DATA
+
+      // START TABLE DATA
       tabella: {
         selectMode: 'multi',
         modes: ['multi', 'single'],
@@ -300,24 +316,60 @@ export default {
         ],
         selezionati: 0,
       },
+      // END TABLE DATA
+
+      // START FILTER TABLE DATA
       filters: {
         nome: '',
         quota: '',
         prof: '',
       },
+      // END FILTER TABLE DATA
+
+      // START MAP LABELS SELECTOR DATA
+      selettore: {
+        selected: String,
+        options: Array,
+      },
+      // END MAP LABELS SELECTOR DATA
+
+      // START MAP DATA
       datimappa: [],
       chart: {
         profalt: [],
       },
+      // END MAP DATA
+
+      // START SELECTOR TEMPERATURE DATA
+      pozzo_temp: {
+        selected: String,
+        options: Array,
+      },
+      // END SELECTOR TEMPERATURE DATA
+
+      // START SELECTOR LITO DATA
+      pozzo_lito: {
+        selected: String,
+        options: Array,
+      },
+      // END SELECTOR LITO DATA
+
+      // START SCATTER TEMP DATA
       scatter: {
         temperature: [],
       },
+      // END SCATTER TEMP DATA
+
+      // START SINGLE BAR LITO DATA
       bar: {
         litologia: [],
       },
+      // END SINGLE BAR LITO DATA
+
     };
   },
   mounted() {
+    // POZZI.JSON LOADING
     fetch('static/data/pozzi.json')
       .then(res => res.json())
       .then((out) => {
@@ -341,23 +393,25 @@ export default {
           stato: d.stato,
         }));
 
-
+        // CROSSFILTER GROUPING AND FILTERING
         cf = crossfilter(this.reports);
         dregione = cf.dimension(d => d.regione);
-        // dprof = cf.dimension(d => d.prof);
-        // dquota = cf.dimension(d => d.quota);
+        this.regione.options = ['TUTTE'].concat(dregione.group().reduceCount().all().map(v => v.key));
+        this.regione.selected = this.regione.options[0];
+        this.selettore.options = ['PROFONDITÀ/QUOTA', 'LOCALIZZAZIONE', 'PROPRIETARIO', 'CONDIZIONI'];
+        this.selettore.selected = this.selettore.options[0];
 
+        // D3 DATA MANIPULATION
         this.sliderprof.valore = d3.max(this.reports, d => d.prof);
         this.sliderquota.valore = d3.max(this.reports, d => d.quota);
         this.sliderprof.max = d3.max(this.reports, d => d.prof);
         this.sliderquota.max = d3.max(this.reports, d => d.quota);
         this.sliderquota.min = d3.min(this.reports, d => d.quota);
-        this.regione.options = ['TUTTE'].concat(dregione.group().reduceCount().all().map(v => v.key));
-        this.regione.selected = this.regione.options[0];
-        this.selettore.options = ['PROFONDITÀ/QUOTA', 'LOCALIZZAZIONE', 'PROPRIETARIO', 'CONDIZIONI'];
-        this.selettore.selected = this.selettore.options[0];
+
         this.refreshTable();
       });
+
+    // POZZI_TEMP.JSON LOADING
     fetch('static/data/pozzi_temp.json')
       .then(res => res.json())
       .then((out) => {
@@ -367,11 +421,14 @@ export default {
           tkey: +d.key,
           tnome: d.nome,
         }));
-        // eslint-disable-next-line camelcase
-        cf_temp = crossfilter(this.reports_temp);
-        dtnome = cf_temp.dimension(d => d.tnome);
+
+        // CROSSFILTER GROUPING AND FILTERING
+        cfTemp = crossfilter(this.reports_temp);
+        dtnome = cfTemp.dimension(d => d.tnome);
         this.filtro_temperature = dtnome.filter(this.pozzo_temp.selected);
       });
+
+    // POZZI_LITSTR.JSON LOADING
     fetch('static/data/pozzi_litstr.json')
       .then(res => res.json())
       .then((out) => {
@@ -380,13 +437,16 @@ export default {
           lito: d.litologia,
           nomepozzo: d.nome,
         }));
-        // eslint-disable-next-line camelcase
-        cf_lito = crossfilter(this.reports_litstr);
-        dlitonome = cf_lito.dimension(d => d.nomepozzo);
+
+        // CROSSFILTER GROUPING AND FILTERING
+        cfLito = crossfilter(this.reports_litstr);
+        dlitonome = cfLito.dimension(d => d.nomepozzo);
         this.filtro_litologia = dlitonome.filter(this.pozzo_lito.selected);
       });
   },
+
   computed: {
+    // FILTERED FUNCTION FOR TABLE COLUMN
     filtered() {
       const filtered = this.tabella.rowSelected.filter(item => Object.keys(this.filters)
         .every(key =>
@@ -398,6 +458,8 @@ export default {
         prof: '',
       }];
     },
+
+    // COMPUTING NUMBER OF RECORD FILTERED
     numberofrecords() {
       if (this.tabella.rowSelected.length === 0) {
         return 0;
@@ -405,7 +467,9 @@ export default {
       return this.filtered.length;
     },
   },
+
   methods: {
+    // CROSSFILTERING REGIONE
     refreshTable() {
       if (this.regione.selected === 'TUTTE') {
         this.tabella.rowSelected = this.reports.filter(selected =>
@@ -421,6 +485,8 @@ export default {
     },
 
     onRowSelected(items) {
+      // ROW SELECTED IN THE TABLE
+      this.selectedTable = items;
       this.filtro_temperature = this.reports_temp.filter(d => d.tnome === this.pozzo_temp.selected);
       this.scatter.temperature = this.filtro_temperature.map(v => ({
         nome: v.tnome,
@@ -434,12 +500,15 @@ export default {
         y: +v.prof,
         name: v.lito,
       }));
-      this.selectedTable = items;
+
+      // DATA USED FOR PROF ALT CHART COMPONENT
       this.chart.profalt = this.selectedTable.map(v => ({
         key: v.nome,
         value1: +v.prof,
         value2: +v.quota,
       }));
+
+      // DATA USED FOR MAPPA COMPONENT
       this.datimappa = this.selectedTable.map(v => ({
         lon: v.lon_wgs84,
         lat: v.lat_wgs84,
@@ -475,15 +544,21 @@ export default {
         provincia: v.provincia,
         posizione: v.posizione,
       }));
+
+      // COMPUTED NUMBER OF SELECTED WELL
       this.tabella.selezionati = this.selectedTable.length;
       this.nome_selettore = this.selectedTable.map(v => ({
         nome: v.nome,
       }));
+
+      // CONTENT OF THE SELECTORS FOR LITO AND TEMPERATURE
       this.pozzo_temp.options = this.nome_selettore.map(d => d.nome);
       this.pozzo_temp.selected = this.pozzo_temp.options[0];
       this.pozzo_lito.options = this.nome_selettore.map(d => d.nome);
       this.pozzo_lito.selected = this.pozzo_lito.options[0];
     },
+
+    // FUNCTION FOR SELECT/CLEAR ALL ROWS IN THE TABLE
     selectAllRows() {
       this.$refs.selectableTable.selectAllRows();
     },
@@ -491,20 +566,22 @@ export default {
       this.$refs.selectableTable.clearSelected();
     },
   },
+
+  // UPDATING CHANGES IN THE APP
   watch: {
     pozzo_temp: {
       handler(newVal) {
         dlitonome.filter(newVal.selected);
         this.onRowSelected();
       },
-      deep: true, // force watching within properties
+      deep: true,
     },
     pozzo_lito: {
       handler(newVal) {
         dtnome.filter(newVal.selected);
         this.onRowSelected();
       },
-      deep: true, // force watching within properties
+      deep: true,
     },
 
     regione: {
@@ -516,7 +593,7 @@ export default {
         }
         this.refreshTable();
       },
-      deep: true, // force watching within properties
+      deep: true,
     },
     sliderprof: {
       handler(newVal, oldVal) {
@@ -525,7 +602,7 @@ export default {
         }
         this.refreshTable();
       },
-      deep: true, // force watching within properties
+      deep: true,
     },
     sliderquota: {
       handler(newVal, oldVal) {
@@ -534,7 +611,7 @@ export default {
         }
         this.refreshTable();
       },
-      deep: true, // force watching within properties
+      deep: true,
     },
   },
 };
