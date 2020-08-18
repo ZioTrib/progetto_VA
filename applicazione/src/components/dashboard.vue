@@ -136,12 +136,12 @@
             <!--WELL LABEL SELECTOR FOR MAP VISUALIZATION-->
             <b-button v-b-toggle.collapse-1-inner size="sm">etichetta pozzo</b-button>
             <b-collapse id="collapse-1-inner" class="mt-2">
-              <b-card>
+              <b-card class="text-center">
                 <b-row>
                   <b-col>
                     <b-form-group>
                       <b-form-checkbox-group
-                        size="sm"
+                        size="m"
                         v-model="selettore.selected"
                         :options="selettore.options"
                         name="buttonsSelector"

@@ -1,5 +1,5 @@
 <template>
-  <vue-plotly  ref="Plotly" :data="data" :layout="layout" :config="config"/>
+  <vue-plotly  ref="Plotly" :data="data" :layout="layout" :config="config" :options="options"/>
 </template>
 
 <script>
