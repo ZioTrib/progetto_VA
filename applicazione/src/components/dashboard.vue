@@ -284,6 +284,11 @@ export default {
         rowSelected: [],
         fields: [
           {
+            key: 'key',
+            label: 'ID',
+            sortable: true,
+          },
+          {
             key: 'nome',
             label: 'Nome Pozzo',
             sortable: true,
@@ -301,6 +306,11 @@ export default {
           {
             key: 'tipo',
             label: 'Tipo',
+            sortable: true,
+          },
+          {
+            key: 'scopo',
+            label: 'Scopo',
             sortable: true,
           },
           {
@@ -325,10 +335,12 @@ export default {
 
       // START FILTER TABLE DATA
       filters: {
+        key: '',
         nome: '',
         prof: '',
         quota: '',
         tipo: '',
+        scopo: '',
         uso: '',
         esito: '',
         stato: '',
@@ -462,10 +474,12 @@ export default {
           String(item[key])
             .includes(this.filters[key])));
       return filtered.length > 0 ? filtered : [{
+        key: '',
         nome: '',
         prof: '',
         quota: '',
         tipo: '',
+        scopo: '',
         uso: '',
         esito: '',
         stato: '',
