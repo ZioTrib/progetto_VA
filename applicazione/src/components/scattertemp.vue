@@ -1,5 +1,5 @@
 <template>
-  <vue-plotly :data="data" :layout="layout"/>
+  <vue-plotly :data="data" :layout="layout" :options="options"/>
 </template>
 
 <script>
@@ -16,7 +16,9 @@ export default {
   data() {
     const trace1 = {
       y: [],
-      mode: 'markers',
+      text: [],
+      textposition: 'bottom',
+      mode: 'markers+text',
       marker: {
         size: 20,
         color: [],
@@ -25,13 +27,48 @@ export default {
     return {
       data: [trace1],
       layout: {
-        title: 'Scatter Plot with a Color Dimension',
+        paper_bgcolor: 'rgb(248,249,250)',
+        plot_bgcolor: 'rgb(248,249,250)',
+        dragmode: 'pan',
+        height: '100%',
+        margin: {
+          l: 60,
+          r: 50,
+          b: 30,
+          t: 30,
+          pad: 0,
+        },
+        autosize: true,
+        hovermode: 'y',
+        hoverinfo: 'y',
+        xaxis: {
+          autorange: true,
+          showgrid: false,
+          zeroline: false,
+          showline: false,
+          autotick: true,
+          fixedrange: true,
+          ticks: '',
+          showticklabels: false,
+          title: 'misurazioni',
+        },
+        yaxis: {
+          showgrid: true,
+          zeroline: false,
+          showline: false,
+          fixedrange: true,
+          title: 'profondità',
+        },
+      },
+      options: {
+        displayModeBar: false,
       },
     };
   },
   watch: {
     Aggregation_scatter(datum) {
-      this.data[0].y = datum.map(d => d.prof);
+      this.data[0].y = datum.map(d => d.prof * -1);
+      this.data[0].text = datum.map(d => d.text);
       this.data[0].marker.color = datum.map(d => d.temp);
     },
   },
