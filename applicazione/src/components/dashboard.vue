@@ -80,15 +80,17 @@
                   :select-mode="tabella.selectMode"
                   @row-selected="onRowSelected"
                   responsive="sm"
+                  small
                   sticky-header
                   :fields="tabella.fields"
                   class='tabella'
                   ref="selectableTable"
                   show-empty :items="filtered">
                   <template slot="top-row" slot-scope="{ fields }">
-                    <td v-for="field in fields" :key="field.key">
+                    <b-td v-for="field in fields" :key="field.key"
+                          variant="dark">
                       <input v-model="filters[field.key]" :placeholder="field.label">
-                    </td>
+                    </b-td>
                   </template>
                 </b-table>
                 <b-row class="mb-2">
@@ -152,7 +154,7 @@
             </b-collapse>
           </b-card>
         </b-collapse>
-        <!--PROFA AND ALT BAR CHART-->
+        <!--PROF AND ALT BAR CHART-->
         <b-collapse id="profalt" class="mt-1">
         <b-card bg-variant="light">
           <h3> quota e profondità pozzi </h3>
@@ -190,7 +192,7 @@
           <b-row>
             <b-col>
               <div>
-                <!-- SINGLE BAR PLOT FOR LITO -->
+                <!-- SINGLE BAR PLOT FOR LITHOLOGY -->
                 <highcharts :aggregation_bar="bar.litologia"/>
               </div>
             </b-col>
@@ -244,9 +246,12 @@ export default {
   },
   data() {
     return {
+      // DATASETS ARRAY
       reports: [],
       reports_temp: [],
       reports_litstr: [],
+
+      // DATASETS FILTERED FOR TEMPERATURE AND LITHOLOGY CHART
       filtro_temperature: [],
       filtro_litologia: [],
 
@@ -321,8 +326,12 @@ export default {
       // START FILTER TABLE DATA
       filters: {
         nome: '',
-        quota: '',
         prof: '',
+        quota: '',
+        tipo: '',
+        uso: '',
+        esito: '',
+        stato: '',
       },
       // END FILTER TABLE DATA
 
@@ -352,7 +361,7 @@ export default {
         selected: String,
         options: Array,
       },
-      // END SELECTOR LITO DATA
+      // END SELECTOR LITHO DATA
 
       // START SCATTER TEMP DATA
       scatter: {
@@ -360,11 +369,11 @@ export default {
       },
       // END SCATTER TEMP DATA
 
-      // START SINGLE BAR LITO DATA
+      // START SINGLE BAR LITHO DATA
       bar: {
         litologia: [],
       },
-      // END SINGLE BAR LITO DATA
+      // END SINGLE BAR LITHO DATA
 
     };
   },
@@ -454,8 +463,12 @@ export default {
             .includes(this.filters[key])));
       return filtered.length > 0 ? filtered : [{
         nome: '',
-        quota: '',
         prof: '',
+        quota: '',
+        tipo: '',
+        uso: '',
+        esito: '',
+        stato: '',
       }];
     },
 
@@ -551,7 +564,7 @@ export default {
         nome: v.nome,
       }));
 
-      // CONTENT OF THE SELECTORS FOR LITO AND TEMPERATURE
+      // CONTENT OF THE SELECTORS FOR LITHO AND TEMPERATURE
       this.pozzo_temp.options = this.nome_selettore.map(d => d.nome);
       this.pozzo_temp.selected = this.pozzo_temp.options[0];
       this.pozzo_lito.options = this.nome_selettore.map(d => d.nome);
