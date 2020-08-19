@@ -8,7 +8,7 @@
         <b-button v-b-toggle.mappa variant="primary"
                   class="m-1"> Mappa dei pozzi in Italia</b-button>
         <b-button v-b-toggle.profalt variant="primary"
-                  class="m-1">Profondità - altitudine</b-button>
+                  class="m-1">Profondità | Quota</b-button>
         <!--START COLLAPSABLE CARDS SECTION-->
         <b-collapse  visible id="elencopozzi">
           <b-card bg-variant="light">
@@ -541,6 +541,9 @@ export default {
         key: v.nome,
         value1: +v.prof,
         value2: +v.quota,
+        text1: `${+v.prof * -1} metri`,
+        text2: `${+v.quota} metri`,
+
       }));
 
       // DATA USED FOR MAP COMPONENT

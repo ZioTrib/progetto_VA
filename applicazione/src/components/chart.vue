@@ -17,36 +17,57 @@ export default {
     const trace1 = {
       x: [],
       y: [],
+      text: 'metri',
       base: 0,
       name: 'profondità',
       type: 'bar',
       marker: {
+        color: '#002B61',
+        line: {
+          color: 'rgb(0,0,0)',
+          width: 1,
+        },
       },
     };
     const trace2 = {
       x: [],
       y: [],
+      text: 'metri',
       base: 0,
       name: 'quota',
       type: 'bar',
       marker: {
+        color: '#9EC9FF',
+        line: {
+          color: 'rgb(0,0,0)',
+          width: 1,
+        },
       },
+
     };
     return {
       data: [trace1, trace2],
       layout: {
+        paper_bgcolor: 'rgb(248,249,250)',
+        plot_bgcolor: 'rgb(248,249,250)',
         height: 600,
+        margin: {
+          l: 60,
+          r: 50,
+          b: 30,
+          t: 30,
+          pad: 0,
+        },
         autosize: true,
         barmode: 'stack',
-        dragmode: 'pan',
-        scrollZoom: true,
+        dragmode: false,
         xaxis: {
           tickangle: 45,
           showgrid: false,
           zeroline: false,
           showline: false,
           autotick: true,
-          range: [1, 15],
+          range: [0, 10],
           title: 'nomi pozzi',
           type: 'category',
           rangeslider: {
@@ -59,13 +80,14 @@ export default {
           showline: false,
           autotick: true,
           fixedrange: true,
-          title: 'profondità / quota',
+          title: 'profondità | quota',
         },
       },
       config: {
         responsive: true,
       },
       options: {
+        displayModeBar: false,
       },
     };
   },
