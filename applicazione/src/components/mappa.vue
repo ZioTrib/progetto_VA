@@ -16,15 +16,16 @@ export default {
   },
   data() {
     const scl = [
-      [0, '#d1f3ff'],
-      [0.125, '#acddf3'],
-      [0.25, '#88c6e9'],
-      [0.375, '#66afdf'],
-      [0.5, '#4597d5'],
-      [0.625, '#2380ca'],
-      [0.75, '#0067bd'],
-      [0.875, '#004fad'],
-      [1, '#00359b']];
+      [0, '#9EC9FF'],
+      [0.125, '#77B5FF'],
+      [0.25, '#5AA3FF'],
+      [0.375, '#4893FF'],
+      [0.5, '#3d84f3'],
+      [0.625, '#2670DF'],
+      [0.75, '#044BA0'],
+      [0.875, '#003B81'],
+      [1, '#002B61'],
+    ];
     return {
       data: [
         {
@@ -35,7 +36,7 @@ export default {
           lon: [],
           marker: {
             color: [],
-            size: 10,
+            size: 7,
             colorscale: scl,
             cmin: 0,
             symbol: 'circle',
@@ -54,11 +55,16 @@ export default {
         },
       ],
       layout: {
+        paper_bgcolor: 'rgb(248,249,250)',
+        plot_bgcolor: 'rgb(248,249,250)',
         colorbar: true,
         autosize: true,
         dragmode: 'zoom',
         mapbox: { style: 'carto-darkmatter', center: { lat: 42, lon: 11.8 }, zoom: 4.35 },
         margin: { r: 0, t: 0, b: 0, l: 0 },
+      },
+      options: {
+        displayModeBar: false,
       },
       config: {
         responsive: true,

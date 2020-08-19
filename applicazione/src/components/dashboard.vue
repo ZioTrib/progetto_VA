@@ -125,6 +125,7 @@
         <!--MAP COLLAPSABLE CARD-->
         <b-collapse id="mappa" class="mt-1">
           <b-card bg-variant="light">
+            <h3> Mappa dei pozzi </h3>
             <b-row class="text-center">
               <b-col>
                 <div style="height:460px">
@@ -157,7 +158,7 @@
         <!--PROF AND ALT BAR CHART-->
         <b-collapse id="profalt" class="mt-1">
         <b-card bg-variant="light">
-          <h3> quota e profondità pozzi </h3>
+          <h3> Quota e profondità pozzi </h3>
           <div>
             <b-col cols="12">
             <chart :Aggregation="chart.profalt"></chart>
