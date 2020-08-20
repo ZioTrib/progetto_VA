@@ -223,7 +223,6 @@
 <script>
 import * as d3 from 'd3';
 import crossfilter from 'crossfilter';
-import informazioni from './informazioni';
 import chart from './chart';
 import mappa from './mappa';
 import scattertemp from './scattertemp';
@@ -244,7 +243,6 @@ export default {
   name: 'dashboard',
   components: {
     scattertemp,
-    informazioni,
     chart,
     mappa,
     highcharts: barlito,
