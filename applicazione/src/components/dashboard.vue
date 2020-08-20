@@ -64,7 +64,8 @@
                   header-text-variant="white"
                   align="center"
                   header="POZZI SELEZIONATI"
-                  class="text-center"><b-card-text> <h2>{{ tabella.selezionati }}</h2></b-card-text>
+                  class="text-center">
+                  <b-card-text> <h2>{{ tabella.selezionati }}</h2></b-card-text>
                 </b-card>
               </b-col>
             </b-row>
@@ -130,8 +131,9 @@
               <b-col>
                 <div style="height:460px">
                   <!--MAP-->
-                  <mappa :datimappa="datimappa" :selettore = "selettore.selected"></mappa>
-              </div>
+                  <mappa :datimappa="datimappa" :selettore = "selettore.selected"
+                         ref="Plotly"></mappa>
+                </div>
             </b-col>
           </b-row>
             <!--WELL LABEL SELECTOR FOR MAP VISUALIZATION-->
@@ -193,9 +195,9 @@
         </b-card>
         <b-card bg-variant="light" class="mt-1">
           <h3> Litologia </h3>
-          <b-row>
+          <b-row class="mb-5">
             <b-col>
-              <div>
+              <div style="width: 100%">
                 <!-- SINGLE BAR PLOT FOR LITHOLOGY -->
                 <highcharts :aggregation_bar="bar.litologia"/>
               </div>
@@ -208,7 +210,6 @@
               <b-form-select
                 v-model="pozzo_lito.selected"
                 :options="pozzo_lito.options"></b-form-select>
-              <div class="mt-3">Selected: <strong>{{ pozzo_lito.selected }}</strong></div>
             </div>
           </b-col>
           </b-row>
@@ -535,6 +536,7 @@ export default {
         x: 0,
         y: +v.prof,
         name: v.lito,
+        well: `pozzo: ${this.pozzo_lito.selected}`,
       }));
 
       // DATA USED FOR PROF ALT CHART COMPONENT
@@ -550,6 +552,7 @@ export default {
       // DATA USED FOR MAP COMPONENT
       this.datimappa = this.selectedTable.map(v => ({
         lon: v.lon_wgs84,
+        nome: v.nome,
         lat: v.lat_wgs84,
         tipo: v.tipo,
         prof: v.prof,

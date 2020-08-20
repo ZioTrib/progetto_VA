@@ -13,16 +13,21 @@ import dataModule from 'highcharts/modules/data';
 dataModule(Highcharts);
 const chartOptions = {
   chart: {
+    width: 560,
+    backgroundColor: 'rgb(248,249,250)',
     type: 'column',
   },
+  credits: {
+    enabled: false,
+  },
   title: {
-    text: 'Litho-Stratigraphic profile',
+    text: null,
   },
   xAxis: {
     opposite: true,
-    categories: ['Well: LATINA 1'],
+    categories: [],
     title: {
-      enabled: true,
+      enabled: false,
       // text: 'Litho-Stratigraphic Pile'
     },
     startOnTick: true,
@@ -33,15 +38,24 @@ const chartOptions = {
     reversed: true,
     min: 0,
     title: {
-      text: 'Depth (m)',
+      text: 'profondità',
+      style: {
+        color: 'rgb(68,68,68)',
+        fontSize: '18px',
+      },
     },
-    stackLabels: {
+    /*    stackLabels: {
       enabled: true,
-      inside: true,
-      y: 15,
+      inside: false,
+      y: 0,
       style: {
         fontWeight: 'bold',
-        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray',
+        color: (Highcharts.theme && Highcharts.theme.textColor) || 'blue',
+      },
+    }, */
+    labels: {
+      style: {
+        color: 'rgb(68,68,68)',
       },
     },
   },
@@ -66,7 +80,7 @@ const chartOptions = {
         enabled: true,
         color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
         style: {
-          textShadow: '0 0 3px black',
+          // textShadow: '0 0 3px black',
           color: '#606060',
           fontSize: '9px',
           width: 50,
@@ -89,13 +103,11 @@ const chartOptions = {
   tooltip: {
     formatter() {
       return `<b>${this.point.name
-      }</b>, thickness: <b>${this.y} m</b>`;
+      }</b>, profondità sezione: <b>${this.y} m</b>`;
     },
   },
   series: [{
-    name: 'Well: LATINA 1',
     data: [],
-    // name: 'LATINA 1'
   }],
 };
 export default {
@@ -109,13 +121,13 @@ export default {
   },
   mounted() {
     this.$children[0].chart.vueRef = this;
-    /* eslint-disable */
-    console.log(this.chartOptions.series[0].data);
   },
   watch: {
     Aggregation_bar(datum) {
       this.chartOptions.series[0].data = datum;
+      this.chartOptions.xAxis.categories = datum.map(d => d.well);
     },
   },
 };
 </script>
+
