@@ -4,11 +4,12 @@
     <b-row>
       <b-col cols="7">
         <!--BUTTON FOR COLLAPSABLE ELEMENTS-->
-        <b-button v-b-toggle.elencopozzi variant="primary" class="m-1">Elenco dei pozzi</b-button>
-        <b-button v-b-toggle.mappa variant="primary"
-                  class="m-1"> Mappa dei pozzi in Italia</b-button>
-        <b-button v-b-toggle.profalt variant="primary"
-                  class="m-1">Profondità | Quota</b-button>
+        <b-button size="l" v-b-toggle.elencopozzi variant="primary" class="m-1">
+          ELENCO POZZI</b-button>
+        <b-button size="l" v-b-toggle.mappa variant="primary"
+                  class="m-1"> MAPPA </b-button>
+        <b-button size="l" v-b-toggle.profalt variant="primary"
+                  class="m-1">PROFONDITÀ | QUOTA</b-button>
         <!--START COLLAPSABLE CARDS SECTION-->
         <b-collapse  visible id="elencopozzi">
           <b-card bg-variant="light">
@@ -111,10 +112,10 @@
                 <!--SELECTION BUTTONS-->
                 <b-row>
                   <b-col>
-                    <b-button size="sm" @click="selectAllRows">Seleziona Tutto
+                    <b-button size="md" @click="selectAllRows">Seleziona Tutto
                       <b-badge variant="light"> {{ numberofrecords }}</b-badge>
                     </b-button>
-                    <b-button size="sm" @click="clearSelected">Deseleziona Tutto
+                    <b-button size="md" @click="clearSelected">Deseleziona Tutto
                       <b-badge variant="light"> {{ tabella.selezionati }}</b-badge>
                     </b-button>
                   </b-col>
@@ -124,7 +125,7 @@
           </b-card>
         </b-collapse>
         <!--MAP COLLAPSABLE CARD-->
-        <b-collapse id="mappa" class="mt-1">
+        <b-collapse visible id="mappa" class="mt-1">
           <b-card bg-variant="light">
             <h3> Mappa dei pozzi </h3>
             <b-row class="text-center">
@@ -137,14 +138,14 @@
             </b-col>
           </b-row>
             <!--WELL LABEL SELECTOR FOR MAP VISUALIZATION-->
-            <b-button v-b-toggle.collapse-1-inner size="sm">etichetta pozzo</b-button>
+            <b-button v-b-toggle.collapse-1-inner size="md">ETICHETTA POZZO</b-button>
             <b-collapse id="collapse-1-inner" class="mt-2">
               <b-card class="text-center">
                 <b-row>
                   <b-col>
                     <b-form-group>
                       <b-form-checkbox-group
-                        size="m"
+                        size="md"
                         v-model="selettore.selected"
                         :options="selettore.options"
                         name="buttonsSelector"
@@ -158,7 +159,7 @@
           </b-card>
         </b-collapse>
         <!--PROF AND ALT BAR CHART-->
-        <b-collapse id="profalt" class="mt-1">
+        <b-collapse visible id="profalt" class="mt-1">
         <b-card bg-variant="light">
           <h3> Quota e profondità pozzi </h3>
           <div>
