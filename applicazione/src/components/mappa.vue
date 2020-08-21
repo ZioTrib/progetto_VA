@@ -1,9 +1,11 @@
 <template>
-  <vue-plotly  ref="Plotly" :data="data" :layout="layout" :config="config" :options="options"/>
+  <vue-plotly ref="Plotly" :data="data" :layout="layout" :config="config" :options="options"
+              v-on:click="emitToParent"/>
 </template>
 
 <script>
 import VuePlotly from '@statnett/vue-plotly';
+
 
 export default {
   name: 'chart',
@@ -27,16 +29,18 @@ export default {
       [1, '#002B61'],
     ];
     return {
+      onmapclickname: 'NESSUNO',
       data: [
         {
           type: 'scattermapbox',
-          name: [],
+          nome: [],
           text: [],
           lat: [],
           lon: [],
+          hoverinfo: 'text',
           marker: {
             color: [],
-            size: 7,
+            size: 15,
             colorscale: scl,
             cmin: 0,
             symbol: 'circle',
@@ -71,8 +75,14 @@ export default {
       },
     };
   },
+  methods: {
+    emitToParent() {
+      this.$emit('maptoDashboard', this.onmapclickname);
+    },
+  },
   watch: {
     datimappa(datum) {
+      this.data[0].nome = datum.map(d => d.nome);
       this.data[0].lon = datum.map(d => d.lon);
       this.data[0].lat = datum.map(d => d.lat);
       this.data[0].marker.color = datum.map(d => d.prof);
@@ -85,12 +95,25 @@ export default {
       } else if (this.selettore === 'CONDIZIONI') {
         this.data[0].text = datum.map(d => d.condizioniinfo);
       }
+      this.$refs.Plotly.$on('click', (data) => {
+        for (let i = 0; i < data.points.length; i += 1) {
+          this.onmapclickname = data.points[0].data.nome[data.points[0].pointNumber];
+        }
+      });
     },
+
     selettore(newVal, oldVal) {
       if (newVal !== oldVal) {
         this.selettore = newVal;
         this.datimappa = newVal;
       }
+    },
+
+    onmapclickname(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.onmapclickname = newVal;
+      }
+      return this.onmapclickname;
     },
     deep: true, // force watching within properties
   },

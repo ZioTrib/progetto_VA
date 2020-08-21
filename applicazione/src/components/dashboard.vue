@@ -132,7 +132,7 @@
                 <div style="height:460px">
                   <!--MAP-->
                   <mappa :datimappa="datimappa" :selettore = "selettore.selected"
-                         ref="Plotly"></mappa>
+                         v-on:maptoDashboard="onmapclick"></mappa>
                 </div>
             </b-col>
           </b-row>
@@ -499,6 +499,11 @@ export default {
   },
 
   methods: {
+    onmapclick(value) {
+      this.pozzo_temp.selected = value;
+      this.pozzo_lito.selected = value;
+    },
+
     // CROSSFILTERING REGIONE
     refreshTable() {
       if (this.regione.selected === 'TUTTE') {
