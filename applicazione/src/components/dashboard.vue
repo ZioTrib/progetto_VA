@@ -267,16 +267,16 @@ export default {
 
       // START SLIDERPROF DATA
       sliderprof: {
-        valore: Function,
-        max: Function,
+        valore: 0,
+        max: 0,
       },
       // END SLIDERPROF DATA
 
       // START SLIDERQUOTA DATA
       sliderquota: {
-        valore: Function,
-        min: Function,
-        max: Function,
+        valore: 0,
+        min: 0,
+        max: 0,
       },
       // END SLIDERQUOTA DATA
 
@@ -352,7 +352,7 @@ export default {
 
       // START MAP LABELS SELECTOR DATA
       selettore: {
-        selected: String,
+        selected: 'NESSUNO',
         options: Array,
       },
       // END MAP LABELS SELECTOR DATA
@@ -366,14 +366,14 @@ export default {
 
       // START SELECTOR TEMPERATURE DATA
       pozzo_temp: {
-        selected: String,
+        selected: 'NESSUNO',
         options: Array,
       },
       // END SELECTOR TEMPERATURE DATA
 
       // START SELECTOR LITO DATA
       pozzo_lito: {
-        selected: String,
+        selected: 'NESSUNO',
         options: Array,
       },
       // END SELECTOR LITHO DATA
