@@ -86,7 +86,7 @@ export default {
       this.data[0].lon = datum.map(d => d.lon);
       this.data[0].lat = datum.map(d => d.lat);
       this.data[0].marker.color = datum.map(d => d.prof);
-      if (this.selettore === 'PROFONDITÀ/QUOTA') {
+      if (this.selettore === 'PROFONDITÀ | QUOTA') {
         this.data[0].text = datum.map(d => d.profinfo);
       } else if (this.selettore === 'LOCALIZZAZIONE') {
         this.data[0].text = datum.map(d => d.geoinfo);

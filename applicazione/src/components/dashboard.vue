@@ -422,7 +422,7 @@ export default {
         dregione = cf.dimension(d => d.regione);
         this.regione.options = ['TUTTE'].concat(dregione.group().reduceCount().all().map(v => v.key));
         this.regione.selected = this.regione.options[0];
-        this.selettore.options = ['PROFONDITÀ/QUOTA', 'LOCALIZZAZIONE', 'PROPRIETARIO', 'CONDIZIONI'];
+        this.selettore.options = ['PROFONDITÀ | QUOTA', 'LOCALIZZAZIONE', 'PROPRIETARIO', 'CONDIZIONI'];
         this.selettore.selected = this.selettore.options[0];
 
         // D3 DATA MANIPULATION
@@ -561,6 +561,8 @@ export default {
         prof: v.prof,
         geoinfo: [
           `Nome:${v.nome}`,
+          `Latitudine:${v.lat_wgs84}`,
+          `Longitudine:${v.lon_wgs84}`,
           `Regione:${v.regione}`,
           `Provincia:${v.provincia}`,
           `Località:${v.entitam}`,
