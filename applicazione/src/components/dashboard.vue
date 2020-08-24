@@ -1,17 +1,35 @@
 <template>
 <!--DASHBOARD-->
   <b-container class="dashboard bg-dark" fluid>
+    <div>
+      <b-button v-b-toggle.sidebar size="l" variant="primary">
+        <b-icon icon="list" aria-hidden="true"></b-icon>
+      </b-button>
+      <b-sidebar id="sidebar"
+                 title="Opzioni"
+                 bg-variant="dark"
+                 text-variant="light"
+                 backdrop
+                 shadow>
+        <div class="px-3 py-2">
+          <!--BUTTON FOR COLLAPSABLE ELEMENTS-->
+          <b-button size="l" v-b-toggle.elencopozzi variant="primary" class="m-1">
+            ELENCO POZZI</b-button>
+          <b-button size="l" v-b-toggle.mappa variant="primary"
+                    class="m-1"> MAPPA </b-button>
+          <b-button size="l" v-b-toggle.profalt variant="primary"
+                    class="m-1">PROFONDITÀ | QUOTA</b-button>
+          <b-button size="l" v-b-toggle.grafici variant="primary" class="m-1">
+            GRAFICI</b-button>
+          <b-button size="l" v-b-toggle.sunburst variant="primary" class="m-1">
+            SUNBURST</b-button>
+        </div>
+      </b-sidebar>
+    </div>
     <b-row>
       <b-col cols="7">
-        <!--BUTTON FOR COLLAPSABLE ELEMENTS-->
-        <b-button size="l" v-b-toggle.elencopozzi variant="primary" class="m-1">
-          ELENCO POZZI</b-button>
-        <b-button size="l" v-b-toggle.mappa variant="primary"
-                  class="m-1"> MAPPA </b-button>
-        <b-button size="l" v-b-toggle.profalt variant="primary"
-                  class="m-1">PROFONDITÀ | QUOTA</b-button>
         <!--START COLLAPSABLE CARDS SECTION-->
-        <b-collapse  visible id="elencopozzi">
+        <b-collapse  visible id="elencopozzi" class="mt-1">
           <b-card bg-variant="light">
             <b-row>
               <b-col lg="6" class="my-1">
@@ -172,8 +190,6 @@
       </b-col>
       <b-col cols="5">
         <!-- CHART RIGHT SIDE -->
-        <b-button size="l" v-b-toggle.grafici variant="primary" class="m-1">
-          GRAFICI</b-button>
         <b-collapse visible id="grafici" class="mt-1">
         <b-card bg-variant="light">
           <h3> Temperatura </h3>
@@ -220,8 +236,6 @@
         </b-collapse>
       </b-col>
     </b-row>
-    <b-button size="l" v-b-toggle.sunburst variant="primary" class="m-1">
-      SUNBURST</b-button>
     <b-row>
       <!--SUNBURST CHART-->
       <b-col cols="12">
@@ -253,14 +267,11 @@ import sunburst from './sunburst';
 let cf;
 let cfTemp;
 let cfLito;
-let cfSelected;
 
 // CROSSFILTER DIMENSIONS
 let dregione;
 let dtnome;
 let dlitonome;
-let duso;
-let dproprietar;
 export default {
   name: 'dashboard',
   components: {
