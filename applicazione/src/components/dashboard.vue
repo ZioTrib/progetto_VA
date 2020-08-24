@@ -215,7 +215,23 @@
           </b-col>
           </b-row>
         </b-card>
+        </b-collapse>
       </b-col>
+    </b-row>
+    <b-button size="l" v-b-toggle.sunburst variant="primary" class="m-1">
+      SUNBURST</b-button>
+    <b-row>
+      <!--SUNBURST CHART-->
+      <b-col cols="12">
+      <b-collapse visible id="sunburst" class="mt-1">
+        <b-card bg-variant="light">
+          <h3> Sunburst </h3>
+          <div style="height:600px">
+            <sunburst></sunburst>
+          </div>
+        </b-card>
+      </b-collapse>
+        </b-col>
     </b-row>
   </b-container>
   <!--END DASHBOARD-->
@@ -228,25 +244,29 @@ import chart from './chart';
 import mappa from './mappa';
 import scattertemp from './scattertemp';
 import barlito from './barlito';
+import sunburst from './sunburst';
 
 // CROSSFILTER DATA MANAGEMENT
 // CROSSFILTER INSTANCES
 let cf;
 let cfTemp;
 let cfLito;
+let cfSelected;
 
 // CROSSFILTER DIMENSIONS
 let dregione;
 let dtnome;
 let dlitonome;
-
+let duso;
+let dproprietar;
 export default {
   name: 'dashboard',
   components: {
     scattertemp,
     chart,
     mappa,
-    highcharts: barlito,
+    barlito,
+    sunburst,
   },
   data() {
     return {
