@@ -202,7 +202,7 @@
             <b-col>
               <div style="width: 100%">
                 <!-- SINGLE BAR PLOT FOR LITHOLOGY -->
-                <highcharts :aggregation_bar="bar.litologia"/>
+                <barlito :aggregation_bar="bar.litologia"/>
               </div>
             </b-col>
           </b-row>
