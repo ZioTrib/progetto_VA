@@ -172,7 +172,9 @@
       </b-col>
       <b-col cols="5">
         <!-- CHART RIGHT SIDE -->
-        <h2>Grafici</h2>
+        <b-button size="l" v-b-toggle.grafici variant="primary" class="m-1">
+          GRAFICI</b-button>
+        <b-collapse visible id="grafici" class="mt-1">
         <b-card bg-variant="light">
           <h3> Temperatura </h3>
           <b-row class="mb-5">
