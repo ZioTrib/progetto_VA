@@ -60,7 +60,7 @@ export default {
         },
         autosize: true,
         barmode: 'stack',
-        dragmode: false,
+        dragmode: 'zoom',
         xaxis: {
           tickangle: 45,
           showgrid: false,
