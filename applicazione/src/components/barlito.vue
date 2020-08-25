@@ -42,7 +42,7 @@ const chartOptions = {
       text: 'profondità',
       style: {
         color: 'rgb(68,68,68)',
-        fontSize: '18px',
+        fontSize: '15px',
       },
     },
     /*    stackLabels: {
@@ -83,7 +83,7 @@ const chartOptions = {
         style: {
           // textShadow: '0 0 3px black',
           color: '#606060',
-          fontSize: '9px',
+          fontSize: '10px',
           width: 50,
         },
         // formatter: function () {
