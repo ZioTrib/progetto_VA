@@ -50,7 +50,7 @@ export default {
       layout: {
         paper_bgcolor: 'rgb(248,249,250)',
         plot_bgcolor: 'rgb(248,249,250)',
-        height: 600,
+        height: 550,
         margin: {
           l: 60,
           r: 50,

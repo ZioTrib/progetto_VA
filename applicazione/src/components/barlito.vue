@@ -13,7 +13,8 @@ import dataModule from 'highcharts/modules/data';
 dataModule(Highcharts);
 const chartOptions = {
   chart: {
-    width: 560,
+    width: 460,
+    height: 470,
     backgroundColor: 'rgb(248,249,250)',
     type: 'column',
   },
@@ -72,7 +73,7 @@ const chartOptions = {
   },
   plotOptions: {
     series: {
-      pointWidth: 100,
+      pointWidth: 150,
       stacking: 'normal',
       colorByPoint: true,
       inside: true,

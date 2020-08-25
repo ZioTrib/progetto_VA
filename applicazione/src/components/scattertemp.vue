@@ -30,7 +30,7 @@ export default {
         paper_bgcolor: 'rgb(248,249,250)',
         plot_bgcolor: 'rgb(248,249,250)',
         dragmode: 'pan',
-        height: '100%',
+        height: 470,
         margin: {
           l: 60,
           r: 50,

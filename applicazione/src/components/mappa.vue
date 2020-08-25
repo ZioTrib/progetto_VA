@@ -62,7 +62,7 @@ export default {
         paper_bgcolor: 'rgb(248,249,250)',
         plot_bgcolor: 'rgb(248,249,250)',
         colorbar: true,
-        autosize: true,
+        height: 500,
         dragmode: 'zoom',
         mapbox: { style: 'carto-darkmatter', center: { lat: 42, lon: 11.8 }, zoom: 4.35 },
         margin: { r: 0, t: 0, b: 0, l: 0 },
