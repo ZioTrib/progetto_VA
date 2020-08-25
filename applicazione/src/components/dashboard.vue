@@ -202,15 +202,18 @@
       </b-sidebar>
     </div>
     <b-row>
+      <b-col cols="12">
+        <b-card bg-variant="light" class="my-4">
+          <parallel :datiparallel="datiparallel"></parallel>
+        </b-card>
+      </b-col>
       <!--SUNBURST CHART-->
       <b-col cols="12">
-        <b-collapse visible id="sunburst" class="mt-1">
           <b-card bg-variant="light" class="my-4">
             <div style="height:600px">
               <sunburst></sunburst>
             </div>
           </b-card>
-        </b-collapse>
       </b-col>
     </b-row>
   </b-container>
@@ -223,6 +226,7 @@ import mappa from './mappa';
 import scattertemp from './scattertemp';
 import barlito from './barlito';
 import sunburst from './sunburst';
+import parallel from './parallel';
 
 // CROSSFILTER DATA MANAGEMENT
 // CROSSFILTER INSTANCES
@@ -242,6 +246,7 @@ export default {
     mappa,
     barlito,
     sunburst,
+    parallel,
   },
   data() {
     return {
@@ -386,6 +391,9 @@ export default {
       },
       // END SINGLE BAR LITHO DATA
 
+      // START PARALLEL COORDINATE DATA
+      datiparallel: [],
+      // END PARALLEL COORDINATE DATA
     };
   },
   mounted() {
@@ -559,8 +567,6 @@ export default {
           `Nome:${v.nome}`,
           `Latitudine:${v.lat_wgs84}`,
           `Longitudine:${v.lon_wgs84}`,
-          `Regione:${v.regione}`,
-          `Provincia:${v.provincia}`,
           `Località:${v.entitam}`,
         ],
         profinfo: [
@@ -586,6 +592,14 @@ export default {
         regione: v.regione,
         provincia: v.provincia,
         posizione: v.posizione,
+      }));
+      // DATA USED FOR PARALLEL COORDINATE COMPONENT
+      this.datiparallel = this.selectedTable.map(v => ({
+        tipo: v.tipo,
+        esito: v.esito,
+        scopo: v.scopo,
+        uso: v.uso,
+        stato: v.stato,
       }));
 
       // COMPUTED NUMBER OF SELECTED WELL
