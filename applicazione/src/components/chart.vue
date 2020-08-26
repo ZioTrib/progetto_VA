@@ -51,13 +51,6 @@ export default {
         paper_bgcolor: 'rgb(248,249,250)',
         plot_bgcolor: 'rgb(248,249,250)',
         height: 550,
-        margin: {
-          l: 60,
-          r: 50,
-          b: 30,
-          t: 30,
-          pad: 0,
-        },
         autosize: true,
         barmode: 'stack',
         dragmode: 'zoom',

@@ -130,11 +130,9 @@
             </b-tab>
             <b-tab title="PROFONDITÀ | QUOTA">
               <b-card bg-variant="light">
-                  <div>
                     <b-col cols="12">
                       <chart :Aggregation="chart.profalt"></chart>
                     </b-col>
-                  </div>
               </b-card>
             </b-tab>
           </b-tabs>
