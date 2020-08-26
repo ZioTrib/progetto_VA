@@ -42,7 +42,8 @@ export default {
       layout: {
         paper_bgcolor: 'rgb(248,249,250)',
         plot_bgcolor: 'rgb(248,249,250)',
-        width: 1250,
+        autosize: true,
+        height: 560,
       },
       options: {
         displayModeBar: false,
