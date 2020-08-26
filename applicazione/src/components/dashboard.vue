@@ -563,8 +563,8 @@ export default {
         prof: v.prof,
         geoinfo: [
           `Nome:${v.nome}`,
-          `Latitudine:${v.lat_wgs84}`,
-          `Longitudine:${v.lon_wgs84}`,
+          `Latitudine:${v.lat_wgs84.toPrecision(4)}`,
+          `Longitudine:${v.lon_wgs84.toPrecision(4)}`,
           `Località:${v.entitam}`,
         ],
         profinfo: [
