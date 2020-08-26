@@ -1,6 +1,12 @@
 <template>
   <!--DASHBOARD-->
   <b-container class="dashboard bg-dark" fluid>
+    <b-overlay
+      :show="show"
+      :variant="dark"
+      :opacity="0.70"
+      rounded="lg"
+      spinner-type="grow">
     <div>
       <b-row>
         <b-col cols="7">
@@ -196,7 +202,7 @@
                     <parallel :datiparallel="datiparallel"></parallel>
                   </b-card>
                 </b-tab>
-                <b-tab title="SUNBURST" active>
+                <b-tab title="SUNBURST">
                   <b-card bg-variant="light" style="height:600px">
                     <sunburst></sunburst>
                   </b-card>
@@ -206,6 +212,7 @@
         </b-col>
       </b-row>
     </div>
+    </b-overlay>
   </b-container>
 </template>
 <script>
@@ -240,6 +247,7 @@ export default {
   },
   data() {
     return {
+      show: true,
       // DATASETS ARRAY
       reports: [],
       reports_temp: [],
@@ -385,6 +393,10 @@ export default {
       datiparallel: [],
       // END PARALLEL COORDINATE DATA
     };
+  },
+  created() {
+    // eslint-disable-next-line no-return-assign
+    setTimeout(() => this.show = false, 40 * 1000);
   },
   mounted() {
     // POZZI.JSON LOADING
