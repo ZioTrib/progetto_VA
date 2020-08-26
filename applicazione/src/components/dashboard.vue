@@ -108,10 +108,11 @@
                     <!--SELECTION BUTTONS-->
                     <b-row>
                       <b-col>
-                        <b-button size="md" @click="selectAllRows">Seleziona Tutto
+                        <b-button variant="primary" size="md" @click="selectAllRows">Seleziona Tutto
                           <b-badge variant="light"> {{ numberofrecords }}</b-badge>
                         </b-button>
-                        <b-button size="md" @click="clearSelected">Deseleziona Tutto
+                        <b-button variant="primary"
+                                  size="md" @click="clearSelected">Deseleziona Tutto
                           <b-badge variant="light"> {{ tabella.selezionati }}</b-badge>
                         </b-button>
                       </b-col>
