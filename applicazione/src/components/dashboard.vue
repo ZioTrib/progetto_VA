@@ -6,7 +6,106 @@
         <b-col cols="7">
           <b-card class="mt-4" style="height: 760px">
           <b-tabs content-class="mt-3" justified pills card>
-            <b-tab title="MAPPA DEI POZZI" active>
+            <b-tab title="ELENCO POZZI" active>
+              <b-card bg-variant="light">
+                <b-row>
+                  <b-col lg="6" class="my-1">
+                    <!--SELECTOR FOR REGION-->
+                    <div>
+                      <b-form-group label="Regione Selezionata:" label-cols-md="4">
+                        <b-form-select
+                          v-model="regione.selected"
+                          :options="regione.options"></b-form-select>
+                      </b-form-group>
+                    </div>
+                    <!--SLIDER PROF-->
+                    <div>
+                      <b-form-input
+                        id="range-2"
+                        v-model="sliderprof.valore"
+                        type="range"
+                        min="0"
+                        :max= "sliderprof.max"
+                        step="0.5"></b-form-input>
+                      <div class="mt-2">profondità massima: {{ sliderprof.valore }}</div>
+                    </div>
+                    <!--SLIDER QUOTA-->
+                    <div>
+                      <b-form-input
+                        id="range-2"
+                        v-model="sliderquota.valore"
+                        type="range"
+                        :min="sliderquota.min"
+                        :max="sliderquota.max"
+                        step="0.5"></b-form-input>
+                      <div class="mt-2"> quota massima: {{ sliderquota.valore }}</div>
+                    </div>
+                  </b-col>
+                  <!--COUNTERS-->
+                  <b-col lg="3">
+                    <b-card
+                      border-variant="primary"
+                      header-bg-variant="primary"
+                      header-text-variant="white"
+                      align="center"
+                      header="NUMERO DI POZZI"
+                      class="text-center">
+                      <b-card-text> <h2>{{ numberofrecords }}</h2>  </b-card-text>
+                    </b-card>
+                  </b-col>
+                  <b-col lg="3">
+                    <b-card
+                      border-variant="primary"
+                      header-bg-variant="primary"
+                      header-text-variant="white"
+                      align="center"
+                      header="POZZI SELEZIONATI"
+                      class="text-center">
+                      <b-card-text> <h2>{{ tabella.selezionati }}</h2></b-card-text>
+                    </b-card>
+                  </b-col>
+                </b-row>
+                <b-row>
+                  <b-col>
+                    <!--START TABLE-->
+                    <b-table
+                      selected-variant="primary"
+                      head-variant="dark"
+                      table-variant="light"
+                      hover
+                      selectable
+                      :select-mode="tabella.selectMode"
+                      @row-selected="onRowSelected"
+                      responsive="sm"
+                      small
+                      sticky-header
+                      :fields="tabella.fields"
+                      class='tabella'
+                      ref="selectableTable"
+                      show-empty :items="filtered">
+                      <template slot="top-row" slot-scope="{ fields }">
+                        <b-td v-for="field in fields" :key="field.key"
+                              variant="dark">
+                          <input v-model="filters[field.key]" :placeholder="field.label">
+                        </b-td>
+                      </template>
+                    </b-table>
+                    <!--SELECTION BUTTONS-->
+                    <b-row>
+                      <b-col>
+                        <b-button size="md" @click="selectAllRows">Seleziona Tutto
+                          <b-badge variant="light"> {{ numberofrecords }}</b-badge>
+                        </b-button>
+                        <b-button size="md" @click="clearSelected">Deseleziona Tutto
+                          <b-badge variant="light"> {{ tabella.selezionati }}</b-badge>
+                        </b-button>
+                      </b-col>
+                    </b-row>
+                  </b-col>
+                </b-row>
+              </b-card>
+            </b-tab>
+            <b-tab title="MAPPA DEI POZZI" >
               <b-card bg-variant="light">
                   <b-row class="text-center">
                     <b-col>
@@ -27,105 +126,6 @@
                         buttons
                       ></b-form-checkbox-group>
                     </b-form-group>
-              </b-card>
-            </b-tab>
-            <b-tab title="ELENCO POZZI">
-              <b-card bg-variant="light">
-                  <b-row>
-                    <b-col lg="6" class="my-1">
-                      <!--SELECTOR FOR REGION-->
-                      <div>
-                        <b-form-group label="Regione Selezionata:" label-cols-md="4">
-                          <b-form-select
-                            v-model="regione.selected"
-                            :options="regione.options"></b-form-select>
-                        </b-form-group>
-                      </div>
-                      <!--SLIDER PROF-->
-                      <div>
-                        <b-form-input
-                          id="range-2"
-                          v-model="sliderprof.valore"
-                          type="range"
-                          min="0"
-                          :max= "sliderprof.max"
-                          step="0.5"></b-form-input>
-                        <div class="mt-2">profondità massima: {{ sliderprof.valore }}</div>
-                      </div>
-                      <!--SLIDER QUOTA-->
-                      <div>
-                        <b-form-input
-                          id="range-2"
-                          v-model="sliderquota.valore"
-                          type="range"
-                          :min="sliderquota.min"
-                          :max="sliderquota.max"
-                          step="0.5"></b-form-input>
-                        <div class="mt-2"> quota massima: {{ sliderquota.valore }}</div>
-                      </div>
-                    </b-col>
-                    <!--COUNTERS-->
-                    <b-col lg="3">
-                      <b-card
-                        border-variant="primary"
-                        header-bg-variant="primary"
-                        header-text-variant="white"
-                        align="center"
-                        header="NUMERO DI POZZI"
-                        class="text-center">
-                        <b-card-text> <h2>{{ numberofrecords }}</h2>  </b-card-text>
-                      </b-card>
-                    </b-col>
-                    <b-col lg="3">
-                      <b-card
-                        border-variant="primary"
-                        header-bg-variant="primary"
-                        header-text-variant="white"
-                        align="center"
-                        header="POZZI SELEZIONATI"
-                        class="text-center">
-                        <b-card-text> <h2>{{ tabella.selezionati }}</h2></b-card-text>
-                      </b-card>
-                    </b-col>
-                  </b-row>
-                  <b-row>
-                    <b-col>
-                      <!--START TABLE-->
-                      <b-table
-                        selected-variant="primary"
-                        head-variant="dark"
-                        table-variant="light"
-                        hover
-                        selectable
-                        :select-mode="tabella.selectMode"
-                        @row-selected="onRowSelected"
-                        responsive="sm"
-                        small
-                        sticky-header
-                        :fields="tabella.fields"
-                        class='tabella'
-                        ref="selectableTable"
-                        show-empty :items="filtered">
-                        <template slot="top-row" slot-scope="{ fields }">
-                          <b-td v-for="field in fields" :key="field.key"
-                                variant="dark">
-                            <input v-model="filters[field.key]" :placeholder="field.label">
-                          </b-td>
-                        </template>
-                      </b-table>
-                      <!--SELECTION BUTTONS-->
-                      <b-row>
-                        <b-col>
-                          <b-button size="md" @click="selectAllRows">Seleziona Tutto
-                            <b-badge variant="light"> {{ numberofrecords }}</b-badge>
-                          </b-button>
-                          <b-button size="md" @click="clearSelected">Deseleziona Tutto
-                            <b-badge variant="light"> {{ tabella.selezionati }}</b-badge>
-                          </b-button>
-                        </b-col>
-                      </b-row>
-                    </b-col>
-                  </b-row>
               </b-card>
             </b-tab>
             <b-tab title="PROFONDITÀ | QUOTA">
@@ -163,7 +163,7 @@
                   </b-row>
                 </b-card>
               </b-tab>
-              <b-tab title="LITO-STATIGRAFIA">
+              <b-tab title="LITOSTRATIGRAFIA">
               <b-card bg-variant="light" class="mt-1">
                 <b-row class="mb-5">
                   <b-col>
@@ -188,32 +188,24 @@
             </b-tabs>
           </b-card>
         </b-col>
+        <b-col cols="12">
+          <b-card class="my-4" style="height: 760px">
+              <b-tabs content-class="mt-3" justified pills card>
+                <b-tab title="PARALLEL COORDINATE" active>
+                  <b-card bg-variant="light" style="height: 600px">
+                    <parallel :datiparallel="datiparallel"></parallel>
+                  </b-card>
+                </b-tab>
+                <b-tab title="SUNBURST" active>
+                  <b-card bg-variant="light" style="height:600px">
+                    <sunburst></sunburst>
+                  </b-card>
+                </b-tab>
+              </b-tabs>
+          </b-card>
+        </b-col>
       </b-row>
     </div>
-    <div>
-      <b-sidebar id="sidebar"
-                 title="Opzioni"
-                 bg-variant="dark"
-                 text-variant="light"
-                 backdrop
-                 shadow>
-      </b-sidebar>
-    </div>
-    <b-row>
-      <b-col cols="12">
-        <b-card bg-variant="light" class="my-4">
-          <parallel :datiparallel="datiparallel"></parallel>
-        </b-card>
-      </b-col>
-      <!--SUNBURST CHART-->
-      <b-col cols="12">
-          <b-card bg-variant="light" class="my-4">
-            <div style="height:600px">
-              <sunburst></sunburst>
-            </div>
-          </b-card>
-      </b-col>
-    </b-row>
   </b-container>
 </template>
 <script>
