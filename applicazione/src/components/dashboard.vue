@@ -17,7 +17,11 @@
         <b-col cols="7">
           <b-card class="mt-4" style="height: 760px">
           <b-tabs content-class="mt-3" justified pills card>
-            <b-tab title="ELENCO POZZI" active>
+            <!--ELENCO POZZI TAB START-->
+            <b-tab active>
+              <template v-slot:title>
+                <b-icon icon="table" ></b-icon> ELENCO POZZI
+              </template>
               <b-card bg-variant="light">
                 <b-row>
                   <b-col lg="6" class="my-1">
@@ -116,7 +120,10 @@
                 </b-row>
               </b-card>
             </b-tab>
-            <b-tab title="MAPPA DEI POZZI" >
+            <b-tab>
+              <template v-slot:title>
+                <b-icon icon="map" ></b-icon> MAPPA DEI POZZI
+              </template>
               <b-card bg-variant="light">
                   <b-row class="text-center">
                     <b-col>
@@ -139,7 +146,10 @@
                     </b-form-group>
               </b-card>
             </b-tab>
-            <b-tab title="PROFONDITÀ | QUOTA">
+            <b-tab>
+              <template v-slot:title>
+                <b-icon icon="arrow-down-up" ></b-icon> PROFONDITÀ | QUOTA
+              </template>
               <b-card bg-variant="light">
                     <b-col cols="12">
                       <chart :Aggregation="chart.profalt"></chart>
@@ -152,7 +162,10 @@
         <b-col cols="5">
           <b-card class="mt-4" style="height: 760px">
             <b-tabs content-class="mt-3" justified pills card>
-              <b-tab title="TEMPERATURA" active>
+              <b-tab active>
+                <template v-slot:title>
+                  <b-icon icon="thermometer-half" ></b-icon> TEMPERATURA
+                </template>
                 <b-card bg-variant="light">
                   <b-row class="mb-5">
                     <b-col>
@@ -174,7 +187,10 @@
                   </b-row>
                 </b-card>
               </b-tab>
-              <b-tab title="LITOSTRATIGRAFIA">
+              <b-tab>
+                <template v-slot:title>
+                  <b-icon icon="bar-chart-steps" ></b-icon> LITOSTRATIGRAFIA
+                </template>
               <b-card bg-variant="light" class="mt-1">
                 <b-row class="mb-5">
                   <b-col>
@@ -202,12 +218,18 @@
         <b-col cols="12">
           <b-card class="my-4" style="height: 760px">
               <b-tabs content-class="mt-3" justified pills card>
-                <b-tab title="PARALLEL COORDINATE" active>
+                <b-tab active>
+                  <template v-slot:title>
+                    <b-icon icon="bezier2" ></b-icon> PARALLEL COORDINATE
+                  </template>
                   <b-card bg-variant="light" style="height: 600px">
                     <parallel :datiparallel="datiparallel"></parallel>
                   </b-card>
                 </b-tab>
-                <b-tab title="SUNBURST">
+                <b-tab>
+                  <template v-slot:title>
+                    <b-icon icon="pie-chart" ></b-icon> SUNBURST
+                  </template>
                   <b-card bg-variant="light" style="height:600px">
                     <sunburst></sunburst>
                   </b-card>
