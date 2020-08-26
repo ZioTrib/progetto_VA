@@ -113,6 +113,7 @@ export default {
       if (newVal !== oldVal) {
         this.onmapclickname = newVal;
       }
+      this.emitToParent();
       return this.onmapclickname;
     },
     deep: true, // force watching within properties
