@@ -29,7 +29,13 @@ const chartOptions = {
     categories: [],
     title: {
       enabled: false,
-      // text: 'Litho-Stratigraphic Pile'
+    },
+    labels: {
+      style: {
+        fontFamily: 'Avenir, sans-serif',
+        fontSize: '15px',
+        color: 'rgb(68,68,68)',
+      },
     },
     startOnTick: true,
     endOnTick: true,
@@ -42,34 +48,20 @@ const chartOptions = {
       text: 'profondità',
       style: {
         color: 'rgb(68,68,68)',
-        fontSize: '15px',
+        fontFamily: 'Avenir, sans-serif',
+        fontSize: '18px',
       },
     },
-    /*    stackLabels: {
-      enabled: true,
-      inside: false,
-      y: 0,
-      style: {
-        fontWeight: 'bold',
-        color: (Highcharts.theme && Highcharts.theme.textColor) || 'blue',
-      },
-    }, */
     labels: {
       style: {
+        fontFamily: 'Avenir, sans-serif',
+        fontSize: '15px',
         color: 'rgb(68,68,68)',
       },
     },
   },
   legend: {
     enabled: false,
-    // layout: 'horizontal',
-    // align: 'center',
-    // verticalAlign: 'top',
-    // x: 0,
-    // y: 100,
-    // floating: true,
-    // backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
-    // borderWidth: 1
   },
   plotOptions: {
     series: {
@@ -81,23 +73,13 @@ const chartOptions = {
         enabled: true,
         color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
         style: {
-          // textShadow: '0 0 3px black',
           color: '#606060',
-          fontSize: '10px',
+          fontFamily: 'Avenir, sans-serif',
+          fontSize: '13px',
           width: 50,
         },
-        // formatter: function () {
-        // return '<b>' + this.point.name + '</b>' + ': ' + this.y + '<br/>' ;
-        // return '<b>' + this.point.name + '</b>' ;
-        // },
         crop: true,
         overflow: 'none',
-        // borderRadius: 5,
-        // backgroundColor: 'rgba(125, 125, 125, 0.7)',
-        // borderWidth: 1,
-        // borderColor: '#AAA',
-        // inside: true,
-        // x: 100
       },
     },
   },

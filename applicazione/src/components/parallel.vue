@@ -35,11 +35,15 @@ export default {
         cmax: 1,
         shape: 'hspline',
       },
-      labelfont: { size: 14 },
+      labelfont: { size: 15 },
     };
     return {
       data: [trace1],
       layout: {
+        font: {
+          family: 'Avenir, sans-serif',
+          size: 15,
+        },
         paper_bgcolor: 'rgb(248,249,250)',
         plot_bgcolor: 'rgb(248,249,250)',
         autosize: true,

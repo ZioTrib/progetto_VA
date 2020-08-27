@@ -59,6 +59,10 @@ export default {
         },
       ],
       layout: {
+        font: {
+          family: 'Avenir, sans-serif',
+          size: 15,
+        },
         paper_bgcolor: 'rgb(248,249,250)',
         plot_bgcolor: 'rgb(248,249,250)',
         colorbar: true,
