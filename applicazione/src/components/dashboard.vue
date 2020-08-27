@@ -23,63 +23,102 @@
                 <b-icon icon="table" ></b-icon> ELENCO POZZI
               </template>
               <b-card bg-variant="light">
+                <!--COUNTERS-->
+                <b-collapse id="collapse-counters"  visible class="mt-2">
+                  <b-row>
+                    <b-col>
+                      <b-card
+                        border-variant="primary"
+                        header-bg-variant="primary"
+                        header-text-variant="white"
+                        align="center"
+                        style="max-height: 300px"
+                        class="text-center">
+                        <b-card-text> <h1>{{ numberofrecords }}</h1>  </b-card-text>
+                        <template v-slot:header>
+                          NUMERO DI POZZI
+                        </template>
+                      </b-card>
+                    </b-col>
+                    <b-col>
+                      <b-card
+                        border-variant="primary"
+                        header-bg-variant="primary"
+                        header-text-variant="white"
+                        align="center"
+                        style="max-height: 300px"
+                        class="text-center">
+                        <b-card-text> <h1>{{ tabella.selezionati }}</h1> </b-card-text>
+                        <template v-slot:header>
+                          POZZI SELEZIONATI
+                        </template>
+                      </b-card>
+                    </b-col>
+                  </b-row>
+                </b-collapse>
                 <b-row>
-                  <b-col lg="6" class="my-1">
+                  <b-col lg="12" class="my-1">
+                    <b-collapse id="collapse-filters"  class="mt-2">
                     <!--SELECTOR FOR REGION-->
                     <div>
-                      <b-form-group label="Regione Selezionata:" label-cols-md="4">
+                      <b-form-group label="Regione selezionata"
+                                    label-for="regione">
                         <b-form-select
+                          size="sm"
+                          id="regione"
                           v-model="regione.selected"
-                          :options="regione.options"></b-form-select>
+                          :options="regione.options">
+                        </b-form-select>
                       </b-form-group>
                     </div>
                     <!--SLIDER PROF-->
-                    <div>
-                      <b-form-input
-                        id="range-2"
-                        v-model="sliderprof.valore"
-                        type="range"
-                        min="0"
-                        :max= "sliderprof.max"
-                        step="0.5"></b-form-input>
-                      <div class="mt-2">profondità massima: {{ sliderprof.valore }}</div>
-                    </div>
+                    <b-form-group label-for="maxprof">
+                      <b-input-group>
+                        <b-input-group-append is-text>
+                          <div style="width: 150px">
+                          Profondità massima
+                          </div>
+                        </b-input-group-append>
+                        <b-form-input
+                          id="maxprof"
+                          v-model="sliderprof.valore"
+                          type="range"
+                          number
+                          :min="sliderprof.min"
+                          :max="sliderprof.max"
+                          step="100"
+                        ></b-form-input>
+                        <b-input-group-append is-text>
+                          {{ `${sliderprof.valore.toFixed(2)} metri`}}
+                        </b-input-group-append>
+                      </b-input-group>
+                    </b-form-group>
                     <!--SLIDER QUOTA-->
-                    <div>
-                      <b-form-input
-                        id="range-2"
-                        v-model="sliderquota.valore"
-                        type="range"
-                        :min="sliderquota.min"
-                        :max="sliderquota.max"
-                        step="0.5"></b-form-input>
-                      <div class="mt-2"> quota massima: {{ sliderquota.valore }}</div>
-                    </div>
-                  </b-col>
-                  <!--COUNTERS-->
-                  <b-col lg="3">
-                    <b-card
-                      border-variant="primary"
-                      header-bg-variant="primary"
-                      header-text-variant="white"
-                      align="center"
-                      header="NUMERO DI POZZI"
-                      class="text-center">
-                      <b-card-text> <h2>{{ numberofrecords }}</h2>  </b-card-text>
-                    </b-card>
-                  </b-col>
-                  <b-col lg="3">
-                    <b-card
-                      border-variant="primary"
-                      header-bg-variant="primary"
-                      header-text-variant="white"
-                      align="center"
-                      header="POZZI SELEZIONATI"
-                      class="text-center">
-                      <b-card-text> <h2>{{ tabella.selezionati }}</h2></b-card-text>
-                    </b-card>
+                    <b-form-group label-for="maxquota">
+                      <b-input-group>
+                        <b-input-group-append is-text>
+                          <div style="width: 150px">
+                          Quota massima
+                          </div>
+                        </b-input-group-append>
+                        <b-form-input
+                          id="maxquota"
+                          v-model="sliderquota.valore"
+                          type="range"
+                          number
+                          :min="sliderquota.min"
+                          :max="sliderquota.max"
+                          step="100"
+                        ></b-form-input>
+                        <b-input-group-append is-text>
+                          {{ `${sliderquota.valore.toFixed(2)} metri`}}
+                        </b-input-group-append>
+                      </b-input-group>
+                    </b-form-group>
+                    </b-collapse>
                   </b-col>
                 </b-row>
+
                 <b-row>
                   <b-col>
                     <!--START TABLE-->
@@ -92,7 +131,6 @@
                       :select-mode="tabella.selectMode"
                       @row-selected="onRowSelected"
                       responsive="sm"
-                      small
                       sticky-header
                       :fields="tabella.fields"
                       class='tabella'
@@ -107,7 +145,7 @@
                     </b-table>
                     <!--SELECTION BUTTONS-->
                     <b-row>
-                      <b-col>
+                      <b-col cols="8">
                         <b-button variant="primary" size="md" @click="selectAllRows">Seleziona Tutto
                           <b-badge variant="light"> {{ numberofrecords }}</b-badge>
                         </b-button>
@@ -115,6 +153,13 @@
                                   size="md" @click="clearSelected">Deseleziona Tutto
                           <b-badge variant="light"> {{ tabella.selezionati }}</b-badge>
                         </b-button>
+                      </b-col>
+                      <b-col cols="4">
+                        <div align="right">
+                        <b-button size="md" v-b-toggle.collapse-filters.collapse-counters>
+                          <b-icon icon="funnel"></b-icon> Filtra
+                        </b-button>
+                        </div>
                       </b-col>
                     </b-row>
                   </b-col>
@@ -287,7 +332,7 @@ export default {
 
       // START REGION SELECTOR DATA
       regione: {
-        selected: 'TUTTE',
+        selected: 'TUTTA L\'ITALIA',
         options: [],
       },
       // END REGION SELECTOR DATA
@@ -379,7 +424,7 @@ export default {
 
       // START MAP LABELS SELECTOR DATA
       selettore: {
-        selected: 'NESSUNO',
+        selected: 'NESSUN POZZO SELEZIONATO',
         options: Array,
       },
       // END MAP LABELS SELECTOR DATA
@@ -393,14 +438,14 @@ export default {
 
       // START SELECTOR TEMPERATURE DATA
       pozzo_temp: {
-        selected: 'NESSUNO',
+        selected: 'NESSUN POZZO SELEZIONATO',
         options: Array,
       },
       // END SELECTOR TEMPERATURE DATA
 
       // START SELECTOR LITO DATA
       pozzo_lito: {
-        selected: 'NESSUNO',
+        selected: 'NESSUN POZZO SELEZIONATO',
         options: Array,
       },
       // END SELECTOR LITHO DATA
@@ -454,7 +499,7 @@ export default {
         // CROSSFILTER GROUPING AND FILTERING
         cf = crossfilter(this.reports);
         dregione = cf.dimension(d => d.regione);
-        this.regione.options = ['TUTTE'].concat(dregione.group().reduceCount().all().map(v => v.key));
+        this.regione.options = ['TUTTA L\'ITALIA'].concat(dregione.group().reduceCount().all().map(v => v.key));
         this.regione.selected = this.regione.options[0];
         this.selettore.options = ['PROFONDITÀ | QUOTA', 'LOCALIZZAZIONE', 'PROPRIETARIO', 'CONDIZIONI'];
         this.selettore.selected = this.selettore.options[0];
@@ -540,7 +585,7 @@ export default {
 
     // CROSSFILTERING REGIONE
     refreshTable() {
-      if (this.regione.selected === 'TUTTE') {
+      if (this.regione.selected === 'TUTTA L\'ITALIA') {
         this.tabella.rowSelected = this.reports.filter(selected =>
           selected.prof <= this.sliderprof.valore &&
           selected.prof <= this.sliderquota.valore,
@@ -639,9 +684,9 @@ export default {
       }));
 
       // CONTENT OF THE SELECTORS FOR LITHO AND TEMPERATURE
-      this.pozzo_temp.options = ['NESSUNO'].concat(this.nome_selettore.map(d => d.nome));
+      this.pozzo_temp.options = ['NESSUN POZZO SELEZIONATO'].concat(this.nome_selettore.map(d => d.nome));
       this.pozzo_temp.selected = this.pozzo_temp.options[0];
-      this.pozzo_lito.options = ['NESSUNO'].concat(this.nome_selettore.map(d => d.nome));
+      this.pozzo_lito.options = ['NESSUN POZZO SELEZIONATO'].concat(this.nome_selettore.map(d => d.nome));
       this.pozzo_lito.selected = this.pozzo_lito.options[0];
     },
 
@@ -673,7 +718,7 @@ export default {
 
     regione: {
       handler(newVal) {
-        if (newVal.selected === 'TUTTE') {
+        if (newVal.selected === 'TUTTA L\'ITALIA') {
           dregione.filter(null);
         } else {
           dregione.filter(newVal.selected);
