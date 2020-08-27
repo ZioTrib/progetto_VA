@@ -424,7 +424,7 @@ export default {
   },
   created() {
     // eslint-disable-next-line no-return-assign
-    setTimeout(() => this.show = false, 40 * 1000);
+    setTimeout(() => this.show = false, 25 * 1000);
   },
   mounted() {
     // POZZI.JSON LOADING
@@ -595,8 +595,8 @@ export default {
         prof: v.prof,
         geoinfo: [
           `Nome:${v.nome}`,
-          `Latitudine:${v.lat_wgs84.toPrecision(4)}`,
-          `Longitudine:${v.lon_wgs84.toPrecision(4)}`,
+          `Latitudine:${v.lat_wgs84}`,
+          `Longitudine:${v.lon_wgs84}`,
           `Località:${v.entitam}`,
         ],
         profinfo: [
