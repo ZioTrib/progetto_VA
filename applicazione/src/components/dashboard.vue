@@ -1,186 +1,278 @@
 <template>
   <!--DASHBOARD-->
-  <b-container class="dashboard bg-dark" fluid>
-    <b-overlay
-      no-center
-      :show="show"
-      :opacity="0.85"
-      rounded="lg">
-      <template v-slot:overlay>
-        <div id="loading-wrapper">
-          <div id="loading-text">CARICAMENTO...</div>
-          <div id="loading-content"></div>
-        </div>
-      </template>
-    <div>
-      <b-row>
-        <b-col cols="7">
-          <b-card class="mt-4" style="height: 760px">
-          <b-tabs content-class="mt-3" justified pills card>
-            <!--ELENCO POZZI TAB START-->
-            <b-tab active>
-              <template v-slot:title>
-                <b-icon icon="table" ></b-icon> ELENCO POZZI
-              </template>
-              <b-card bg-variant="light">
-                <!--COUNTERS-->
-                <b-collapse id="collapse-counters"  visible class="mt-2">
-                  <b-row>
-                    <b-col>
-                      <b-card
-                        border-variant="primary"
-                        header-bg-variant="primary"
-                        header-text-variant="white"
-                        align="center"
-                        style="max-height: 300px"
-                        class="text-center">
-                        <b-card-text> <h1>{{ numberofrecords }}</h1>  </b-card-text>
-                        <template v-slot:header>
-                          NUMERO DI POZZI
-                        </template>
-                      </b-card>
-                    </b-col>
-                    <b-col>
-                      <b-card
-                        border-variant="primary"
-                        header-bg-variant="primary"
-                        header-text-variant="white"
-                        align="center"
-                        style="max-height: 300px"
-                        class="text-center">
-                        <b-card-text> <h1>{{ tabella.selezionati }}</h1> </b-card-text>
-                        <template v-slot:header>
-                          POZZI SELEZIONATI
-                        </template>
-                      </b-card>
-                    </b-col>
-                  </b-row>
-                </b-collapse>
-                <b-row>
-                  <b-col lg="12" class="my-1">
-                    <b-collapse id="collapse-filters"  class="mt-2">
-                    <!--SELECTOR FOR REGION-->
-                    <div>
-                      <b-form-group label="Regione selezionata"
-                                    label-for="regione">
-                        <b-form-select
-                          size="sm"
-                          id="regione"
-                          v-model="regione.selected"
-                          :options="regione.options">
-                        </b-form-select>
-                      </b-form-group>
-                    </div>
-                    <!--SLIDER PROF-->
-                    <b-form-group label-for="maxprof">
-                      <b-input-group>
-                        <b-input-group-append is-text>
-                          <div style="width: 150px">
-                          Profondità massima
-                          </div>
-                        </b-input-group-append>
-                        <b-form-input
-                          id="maxprof"
-                          v-model="sliderprof.valore"
-                          type="range"
-                          number
-                          :min="sliderprof.min"
-                          :max="sliderprof.max"
-                          step="100"
-                        ></b-form-input>
-                        <b-input-group-append is-text>
-                          {{ `${sliderprof.valore.toFixed(2)} metri`}}
-                        </b-input-group-append>
-                      </b-input-group>
-                    </b-form-group>
-                    <!--SLIDER QUOTA-->
-                    <b-form-group label-for="maxquota">
-                      <b-input-group>
-                        <b-input-group-append is-text>
-                          <div style="width: 150px">
-                          Quota massima
-                          </div>
-                        </b-input-group-append>
-                        <b-form-input
-                          id="maxquota"
-                          v-model="sliderquota.valore"
-                          type="range"
-                          number
-                          :min="sliderquota.min"
-                          :max="sliderquota.max"
-                          step="100"
-                        ></b-form-input>
-                        <b-input-group-append is-text>
-                          {{ `${sliderquota.valore.toFixed(2)} metri`}}
-                        </b-input-group-append>
-                      </b-input-group>
-                    </b-form-group>
-                    </b-collapse>
-                  </b-col>
-                </b-row>
+  <b-overlay
+    no-center
+    :show="show"
+    :opacity="0.85"
+    rounded="lg">
+    <template v-slot:overlay>
+      <div id="loading-wrapper">
+        <div id="loading-text">CARICAMENTO...</div>
+        <div id="loading-content"></div>
+      </div>
+    </template>
+    <b-container class="dashboard bg-dark" fluid>
+      <div>
+        <b-row class="text-center">
+          <b-col cols="12" class="mt-2">
+          <!--POPOVERS BUTTON-->
+          <b-button pill size="sm" variant="warning" class="px-1"
+                    @click="nascondi = !nascondi">
+            <b-icon icon="info-circle-fill"></b-icon>
+            {{ nascondi ? 'Mostra' : 'Nascondi' }} informazioni
+          </b-button>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col cols="7">
+            <!--POPOVERS-->
+            <b-popover  title="SEZIONE ELENCO POZZI" triggers="hover" variant="warning"
+                        placement="right"
+                        target="popoverElencoPozzi"
+                        :disabled.sync="nascondi">
+              Nella sezione <strong>"Elenco Pozzi"</strong> è possibile <strong>consultare</strong>
+              l'elenco delle risorse geotermiche e <strong>selezionare</strong> quelle
+              da voler analizzare. È possibile <strong>filtrare</strong> l'elenco per
+              <strong>regione, profondità massima</strong> e <strong>quota massima</strong>.
+              Inoltre è prensente una funzione di <strong>ricerca</strong>  per ogni
+              colonna.
 
-                <b-row>
-                  <b-col>
-                    <!--START TABLE-->
-                    <b-table
-                      selected-variant="primary"
-                      head-variant="dark"
-                      table-variant="light"
-                      hover
-                      selectable
-                      :select-mode="tabella.selectMode"
-                      @row-selected="onRowSelected"
-                      responsive="sm"
-                      sticky-header
-                      :fields="tabella.fields"
-                      class='tabella'
-                      ref="selectableTable"
-                      show-empty :items="filtered">
-                      <template slot="top-row" slot-scope="{ fields }">
-                        <b-td v-for="field in fields" :key="field.key"
-                              variant="dark">
-                          <input v-model="filters[field.key]" :placeholder="field.label">
-                        </b-td>
-                      </template>
-                    </b-table>
-                    <!--SELECTION BUTTONS-->
+            </b-popover>
+            <b-popover title="SEZIONE MAPPA" triggers="hover" variant="warning"
+                       placement="right"
+                       target="popoverMappa"
+                       :disabled.sync="nascondi">
+              Nella sezione <strong>"Mappa dei Pozzi"</strong> è possibile consultare la
+              geolocalizzazione dei pozzi selezionati. È possibile selezionate il
+              <strong>tipo di etichetta delle risorse geotermiche</strong> presenti sulla mappa
+              da visualizzare.
+              <strong>Cliccando</strong> sulla risorsa geotermica è possibile visualizzare i
+              dati relativi alle <strong>temperature</strong> e alla
+              <strong>litostratigrafia</strong>.
+            </b-popover>
+            <b-popover  title="SEZIONE PROFONDITÀ E QUOTA" triggers="hover"
+                        variant="warning"
+                        placement="right"
+                        target="popoverProfQuot"
+                        :disabled.sync="nascondi">
+              Nella sezione <strong>"Profondità | Quota"</strong> è possibile consultare le
+              <strong>profondità</strong> e le <strong>quote</strong> delle risorse geotermiche
+              selezionate.
+              È possibile visualizzare entrambi i profili oppure visualizzarli singolarmente
+              cliccando sulla classe "quota" o sulla classe "profondità".
+              <strong>Cliccando</strong> sull'altimetria del pozzo è possibile visualizzare i
+              dati relativi alle <strong>temperature</strong> e alla
+              <strong>litostratigrafia</strong>.
+            </b-popover>
+            <b-popover  title="SEZIONE TEMPERATURA" triggers="hover" variant="warning"
+                        placement="left"
+                        target="popoverTemp"
+                        :disabled.sync="nascondi">
+              Nella sezione <strong>"Temperatura"</strong> è possibile <strong>visualizzare le
+              varie misurazioni di temperatura </strong> (in gradi Celsius) delle
+              risorge geotermiche a differenti livelli di profondità.
+              È possibile <strong>selezionare</strong>  la risorsa geotermica tra quelle
+              selezionate nella sezione "Elenco Pozzi" per la visualizzazione delle temperature.
+            </b-popover>
+            <b-popover title="SEZIONE LITOSTRATIGRAFIA" triggers="hover" variant="warning"
+                       placement="left"
+                        target="popoverLito"
+                        :disabled.sync="nascondi">
+              Nella sezione <strong>"Litostratigrafia"</strong> è possibile <strong>gli strati
+              litologici</strong> che compongono le risorse geotermiche.
+              È possibile <strong>selezionare</strong>  la risorsa geotermica tra quelle
+              selezionate nella sezione "Elenco Pozzi" per la visualizzazione
+              della litostratigrafia.
+            </b-popover>
+            <b-popover  title="SEZIONE PARALLEL COORDINATE" triggers="hover" variant="warning"
+                        placement="top"
+                        target="popoverParallel"
+                        :disabled.sync="nascondi">
+              Nella sezione <strong>"Parallel Coordinate"</strong> vengono visualizzate le frequenze
+              con cui gli attributi <strong>"tipo", "uso", "scopo", "esito", "stato"</strong>
+              si presentano per i pozzi selezionati nella sezione "Elenco Pozzi".
+            </b-popover>
+            <b-popover title="SEZIONE SUNBURST" triggers="hover" variant="warning"
+                       placement="top"
+                        target="popoverSunburst"
+                        :disabled.sync="nascondi">
+              Nella sezione <strong>"Sunburst"</strong> è possibile visualizzare come si
+              distribuiscono tutte le risorge geotermiche secondo la
+              <strong>gerarchia "scopo" -> "uso" -> "stato"</strong>.
+              <strong>Cliccando</strong> su uno degli spicchi del grafico è possibile
+              analizzare la sezione.
+            </b-popover>
+            <b-card class="mt-2" style="height: 760px">
+              <b-tabs content-class="mt-3" justified pills card>
+                <!--ELENCO POZZI TAB START-->
+
+                <b-tab active>
+                  <template v-slot:title>
+                      <b-icon icon="table"></b-icon>
+                      ELENCO POZZI
+                  </template>
+                  <b-card  id="popoverElencoPozzi" bg-variant="light">
+                    <!--COUNTERS-->
+                    <b-collapse id="collapse-counters" visible class="mt-2">
+                      <b-row>
+                        <b-col>
+                          <b-card
+                            border-variant="primary"
+                            header-bg-variant="primary"
+                            header-text-variant="white"
+                            align="center"
+                            style="max-height: 300px"
+                            class="text-center">
+                            <b-card-text><h1>{{ numberofrecords }}</h1></b-card-text>
+                            <template v-slot:header>
+                              NUMERO DI POZZI
+                            </template>
+                          </b-card>
+                        </b-col>
+                        <b-col>
+                          <b-card
+                            border-variant="primary"
+                            header-bg-variant="primary"
+                            header-text-variant="white"
+                            align="center"
+                            style="max-height: 300px"
+                            class="text-center">
+                            <b-card-text><h1>{{ tabella.selezionati }}</h1></b-card-text>
+                            <template v-slot:header>
+                              POZZI SELEZIONATI
+                            </template>
+                          </b-card>
+                        </b-col>
+                      </b-row>
+                    </b-collapse>
                     <b-row>
-                      <b-col cols="8">
-                        <b-button variant="primary" size="md" @click="selectAllRows">Seleziona Tutto
-                          <b-badge variant="light"> {{ numberofrecords }}</b-badge>
-                        </b-button>
-                        <b-button variant="primary"
-                                  size="md" @click="clearSelected">Deseleziona Tutto
-                          <b-badge variant="light"> {{ tabella.selezionati }}</b-badge>
-                        </b-button>
+                      <b-col lg="12" class="my-1">
+                        <b-collapse id="collapse-filters" class="mt-2">
+                          <!--SELECTOR FOR REGION-->
+                          <div>
+                            <b-form-group label="Regione selezionata"
+                                          label-for="regione">
+                              <b-form-select
+                                size="sm"
+                                id="regione"
+                                v-model="regione.selected"
+                                :options="regione.options">
+                              </b-form-select>
+                            </b-form-group>
+                          </div>
+                          <!--SLIDER PROF-->
+                          <b-form-group label-for="maxprof">
+                            <b-input-group>
+                              <b-input-group-append is-text>
+                                <div style="width: 150px">
+                                  Profondità massima
+                                </div>
+                              </b-input-group-append>
+                              <b-form-input
+                                id="maxprof"
+                                v-model="sliderprof.valore"
+                                type="range"
+                                number
+                                :min="sliderprof.min"
+                                :max="sliderprof.max"
+                                step="100"
+                              ></b-form-input>
+                              <b-input-group-append is-text>
+                                {{ `${sliderprof.valore.toFixed(2)} metri` }}
+                              </b-input-group-append>
+                            </b-input-group>
+                          </b-form-group>
+                          <!--SLIDER QUOTA-->
+                          <b-form-group label-for="maxquota">
+                            <b-input-group>
+                              <b-input-group-append is-text>
+                                <div style="width: 150px">
+                                  Quota massima
+                                </div>
+                              </b-input-group-append>
+                              <b-form-input
+                                id="maxquota"
+                                v-model="sliderquota.valore"
+                                type="range"
+                                number
+                                :min="sliderquota.min"
+                                :max="sliderquota.max"
+                                step="100"
+                              ></b-form-input>
+                              <b-input-group-append is-text>
+                                {{ `${sliderquota.valore.toFixed(2)} metri` }}
+                              </b-input-group-append>
+                            </b-input-group>
+                          </b-form-group>
+                        </b-collapse>
                       </b-col>
-                      <b-col cols="4">
-                        <div align="right">
-                        <b-button size="md" v-b-toggle.collapse-filters.collapse-counters>
-                          <b-icon icon="funnel"></b-icon> Filtra
-                        </b-button>
+                    </b-row>
+
+                    <b-row>
+                      <b-col>
+                        <!--START TABLE-->
+                        <b-table
+                          selected-variant="primary"
+                          head-variant="dark"
+                          table-variant="light"
+                          hover
+                          selectable
+                          :select-mode="tabella.selectMode"
+                          @row-selected="onRowSelected"
+                          responsive="sm"
+                          sticky-header
+                          :fields="tabella.fields"
+                          class='tabella'
+                          ref="selectableTable"
+                          show-empty :items="filtered">
+                          <template slot="top-row" slot-scope="{ fields }">
+                            <b-td v-for="field in fields" :key="field.key"
+                                  variant="dark">
+                              <input v-model="filters[field.key]" :placeholder="field.label">
+                            </b-td>
+                          </template>
+                        </b-table>
+                        <!--SELECTION BUTTONS-->
+                        <b-row>
+                          <b-col cols="8">
+                            <b-button variant="primary" size="md" @click="selectAllRows">
+                              Seleziona Tutto
+                              <b-badge variant="light"> {{ numberofrecords }}</b-badge>
+                            </b-button>
+                            <b-button variant="primary"
+                                      size="md" @click="clearSelected">Deseleziona Tutto
+                              <b-badge variant="light"> {{ tabella.selezionati }}</b-badge>
+                            </b-button>
+                          </b-col>
+                          <b-col cols="4">
+                            <div align="right">
+                              <b-button size="md" v-b-toggle.collapse-filters.collapse-counters>
+                                <b-icon icon="funnel"></b-icon>
+                                Filtra
+                              </b-button>
+                            </div>
+                          </b-col>
+                        </b-row>
+                      </b-col>
+                    </b-row>
+                  </b-card>
+                </b-tab>
+                <b-tab>
+                  <template v-slot:title>
+                    <b-icon icon="map"></b-icon>
+                    MAPPA DEI POZZI
+                  </template>
+                  <b-card class="text-center" id="popoverMappa" bg-variant="light">
+                    <b-row>
+                      <b-col>
+                        <div style="height:510px; margin:0 auto;">
+                          <!--MAP-->
+                          <mappa :datimappa="datimappa" :selettore="selettore.selected"
+                                 v-on:maptoDashboard="onmapclick"></mappa>
                         </div>
                       </b-col>
                     </b-row>
-                  </b-col>
-                </b-row>
-              </b-card>
-            </b-tab>
-            <b-tab>
-              <template v-slot:title>
-                <b-icon icon="map" ></b-icon> MAPPA DEI POZZI
-              </template>
-              <b-card bg-variant="light">
-                  <b-row class="text-center">
-                    <b-col>
-                      <div style="height:510px">
-                        <!--MAP-->
-                        <mappa :datimappa="datimappa" :selettore = "selettore.selected"
-                               v-on:maptoDashboard="onmapclick"></mappa>
-                      </div>
-                    </b-col>
-                  </b-row>
-                  <!--WELL LABEL SELECTOR FOR MAP VISUALIZATION-->
+                    <!--WELL LABEL SELECTOR FOR MAP VISUALIZATION-->
                     <b-form-group>
                       <b-form-checkbox-group
                         size="md"
@@ -190,103 +282,111 @@
                         buttons
                       ></b-form-checkbox-group>
                     </b-form-group>
-              </b-card>
-            </b-tab>
-            <b-tab>
-              <template v-slot:title>
-                <b-icon icon="arrow-down-up" ></b-icon> PROFONDITÀ | QUOTA
-              </template>
-              <b-card bg-variant="light">
+                  </b-card>
+                </b-tab>
+                <b-tab>
+                  <template v-slot:title>
+                    <b-icon icon="arrow-down-up"></b-icon>
+                    PROFONDITÀ | QUOTA
+                  </template>
+                  <b-card  id="popoverProfQuot" bg-variant="light" class="text-center">
                     <b-col cols="12">
-                      <chart :Aggregation="chart.profalt"></chart>
-                    </b-col>
-              </b-card>
-            </b-tab>
-          </b-tabs>
-          </b-card>
-        </b-col>
-        <b-col cols="5">
-          <b-card class="mt-4" style="height: 760px">
-            <b-tabs content-class="mt-3" justified pills card>
-              <b-tab active>
-                <template v-slot:title>
-                  <b-icon icon="thermometer-half" ></b-icon> TEMPERATURA
-                </template>
-                <b-card bg-variant="light">
-                  <b-row class="mb-5">
-                    <b-col>
-                      <div>
-                        <!-- SCATTER PLOT FOR TEMPERATURE -->
-                        <scattertemp :aggregation_scatter="scatter.temperature"></scattertemp>
+                      <div style="margin:0 auto;">
+                      <chart :Aggregation="chart.profalt"
+                             v-on:charttoDashboard="onchartclick"></chart>
                       </div>
                     </b-col>
-                  </b-row>
-                  <b-row>
-                    <b-col>
-                      <div>
-                        <!-- WELL SELECTOR -->
-                        <b-form-select
-                          v-model="pozzo_temp.selected"
-                          :options="pozzo_temp.options"></b-form-select>
-                      </div>
-                    </b-col>
-                  </b-row>
-                </b-card>
-              </b-tab>
-              <b-tab>
-                <template v-slot:title>
-                  <b-icon icon="bar-chart-steps" ></b-icon> LITOSTRATIGRAFIA
-                </template>
-              <b-card bg-variant="light" class="mt-1">
-                <b-row class="mb-5">
-                  <b-col>
-                    <div style="width: 100%">
-                      <!-- SINGLE BAR PLOT FOR LITHOLOGY -->
-                      <barlito :aggregation_bar="bar.litologia"/>
-                    </div>
-                  </b-col>
-                </b-row>
-                <b-row>
-                  <b-col>
-                    <div>
-                      <!-- WELL SELECTOR -->
-                      <b-form-select
-                        v-model="pozzo_lito.selected"
-                        :options="pozzo_lito.options"></b-form-select>
-                    </div>
-                  </b-col>
-                </b-row>
-              </b-card>
-              </b-tab>
-            </b-tabs>
-          </b-card>
-        </b-col>
-        <b-col cols="12">
-          <b-card class="my-4" style="height: 760px">
+                  </b-card>
+                </b-tab>
+              </b-tabs>
+            </b-card>
+          </b-col>
+          <b-col cols="5">
+            <b-card class="mt-2" style="height: 760px">
               <b-tabs content-class="mt-3" justified pills card>
                 <b-tab active>
                   <template v-slot:title>
-                    <b-icon icon="bezier2" ></b-icon> PARALLEL COORDINATE
+                    <b-icon icon="thermometer-half"></b-icon>
+                    TEMPERATURA
                   </template>
-                  <b-card bg-variant="light" style="height: 600px">
+                  <b-card id="popoverTemp" bg-variant="light">
+                    <b-row class="mb-5">
+                      <b-col>
+                        <div>
+                          <!-- SCATTER PLOT FOR TEMPERATURE -->
+                          <scattertemp :aggregation_scatter="scatter.temperature"></scattertemp>
+                        </div>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>
+                        <div>
+                          <!-- WELL SELECTOR -->
+                          <b-form-select
+                            v-model="pozzo_temp.selected"
+                            :options="pozzo_temp.options"></b-form-select>
+                        </div>
+                      </b-col>
+                    </b-row>
+                  </b-card>
+                </b-tab>
+                <b-tab>
+                  <template v-slot:title>
+                    <b-icon icon="bar-chart-steps"></b-icon>
+                    LITOSTRATIGRAFIA
+                  </template>
+                  <b-card id="popoverLito" bg-variant="light" class="mt-1">
+                    <b-row class="mb-5">
+                      <b-col>
+                        <div style="width: 100%">
+                          <!-- SINGLE BAR PLOT FOR LITHOLOGY -->
+                          <barlito :aggregation_bar="bar.litologia"/>
+                        </div>
+                      </b-col>
+                    </b-row>
+                    <b-row>
+                      <b-col>
+                        <div>
+                          <!-- WELL SELECTOR -->
+                          <b-form-select
+                            v-model="pozzo_lito.selected"
+                            :options="pozzo_lito.options"></b-form-select>
+                        </div>
+                      </b-col>
+                    </b-row>
+                  </b-card>
+                </b-tab>
+              </b-tabs>
+            </b-card>
+          </b-col>
+          <b-col cols="12">
+            <b-card class="my-4" style="height: 760px">
+              <b-tabs content-class="mt-3" justified pills card>
+                <b-tab active>
+                  <template v-slot:title>
+                    <b-icon icon="bezier2"></b-icon>
+                    PARALLEL COORDINATE
+                  </template>
+                  <b-card id="popoverParallel" bg-variant="light" style="height: 600px">
                     <parallel :datiparallel="datiparallel"></parallel>
                   </b-card>
                 </b-tab>
                 <b-tab>
                   <template v-slot:title>
-                    <b-icon icon="pie-chart" ></b-icon> SUNBURST
+                    <b-icon icon="pie-chart"></b-icon>
+                    SUNBURST
                   </template>
-                  <b-card bg-variant="light" style="height:600px">
+                  <b-card id="popoverSunburst" bg-variant="light" style="height:600px">
                     <sunburst></sunburst>
                   </b-card>
                 </b-tab>
               </b-tabs>
-          </b-card>
-        </b-col>
-      </b-row>
-    </div>
-    </b-overlay>
-  </b-container>
+            </b-card>
+          </b-col>
+        </b-row>
+      </div>
+    </b-container>
+  </b-overlay>
 </template>
 <script>
 import * as d3 from 'd3';
@@ -321,6 +421,7 @@ export default {
   data() {
     return {
       show: true,
+      nascondi: false,
       // DATASETS ARRAY
       reports: [],
       reports_temp: [],
