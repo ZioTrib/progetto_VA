@@ -24,10 +24,6 @@ export default {
       type: 'bar',
       marker: {
         color: '#002B61',
-        line: {
-          color: 'rgb(0,0,0)',
-          width: 1,
-        },
       },
     };
     const trace2 = {
@@ -39,10 +35,6 @@ export default {
       type: 'bar',
       marker: {
         color: '#9EC9FF',
-        line: {
-          color: 'rgb(0,0,0)',
-          width: 1,
-        },
       },
 
     };
