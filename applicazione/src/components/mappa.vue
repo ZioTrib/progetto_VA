@@ -29,7 +29,7 @@ export default {
       [1, '#002B61'],
     ];
     return {
-      onmapclickname: 'NESSUNO',
+      onmapclickname: 'NESSUN POZZO SELEZIONATO',
       data: [
         {
           type: 'scattermapbox',
@@ -67,6 +67,7 @@ export default {
         plot_bgcolor: 'rgb(248,249,250)',
         colorbar: true,
         height: 500,
+        width: 690,
         dragmode: 'zoom',
         mapbox: { style: 'carto-darkmatter', center: { lat: 42, lon: 11.8 }, zoom: 4.35 },
         margin: { r: 0, t: 0, b: 0, l: 0 },
