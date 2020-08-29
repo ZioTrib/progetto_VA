@@ -582,6 +582,10 @@ export default {
       this.pozzo_temp.selected = value;
       this.pozzo_lito.selected = value;
     },
+    onchartclick(value) {
+      this.pozzo_temp.selected = value;
+      this.pozzo_lito.selected = value;
+    },
 
     // CROSSFILTERING REGIONE
     refreshTable() {

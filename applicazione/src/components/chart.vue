@@ -1,5 +1,6 @@
 <template>
-    <vue-plotly :data="data" :layout="layout" :options="options" :config ="config"/>
+    <vue-plotly ref="Plotlychart" :data="data" :layout="layout" :options="options" :config ="config"
+                v-on:click="emitToParent"/>
 </template>
 
 <script>
@@ -46,6 +47,7 @@ export default {
 
     };
     return {
+      onchartclickname: 'NESSUN POZZO SELEZIONATO',
       data: [trace1, trace2],
       layout: {
         font: {
@@ -55,6 +57,7 @@ export default {
         paper_bgcolor: 'rgb(248,249,250)',
         plot_bgcolor: 'rgb(248,249,250)',
         height: 550,
+        width: 690,
         autosize: true,
         barmode: 'stack',
         dragmode: 'zoom',
@@ -88,13 +91,31 @@ export default {
       },
     };
   },
+  methods: {
+    emitToParent() {
+      this.$emit('charttoDashboard', this.onchartclickname);
+    },
+  },
   watch: {
     Aggregation(datum) {
       this.data[0].y = datum.map(d => d.value1 * -1);
       this.data[0].x = datum.map(d => d.key);
       this.data[1].y = datum.map(d => d.value2);
       this.data[1].x = datum.map(d => d.key);
+      this.$refs.Plotlychart.$on('click', (data) => {
+        for (let i = 0; i < data.points.length; i += 1) {
+          this.onchartclickname = data.points[0].x;
+        }
+      });
     },
+    onchartclickname(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.onchartclickname = newVal;
+      }
+      this.emitToParent();
+      return this.onchartclickname;
+    },
+    deep: true, // force watching within properties
   },
 };
 </script>
