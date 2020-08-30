@@ -19,23 +19,23 @@ export default {
       dimensions: [
         {
           label: 'TIPO',
-          values: []
+          values: [],
         },
         {
           label: 'USO',
-          values: []
+          values: [],
         },
         {
           label: 'SCOPO',
-          values: []
+          values: [],
         },
         {
           label: 'ESITO',
-          values: []
+          values: [],
         },
         {
           label: 'STATO',
-          values: []
+          values: [],
         },
       ],
       bundlecolors: true,

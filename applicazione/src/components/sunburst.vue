@@ -43,7 +43,7 @@ import 'vue-d3-sunburst/dist/vue-d3-sunburst.css';
 const colorSchemesNames = Object.keys(colorSchemes)
   .map(key => ({
     value: key,
-    text: colorSchemes[key].name
+    text: colorSchemes[key].name,
   }));
 
 export default {
