@@ -1,6 +1,6 @@
 <template>
-    <vue-plotly ref="Plotlychart" :data="data" :layout="layout" :options="options" :config ="config"
-                v-on:click="emitToParent"/>
+  <vue-plotly ref="Plotlychart" :data="data" :layout="layout" :options="options" :config="config"
+              v-on:click="emitToParent"/>
 </template>
 
 <script>
@@ -62,8 +62,7 @@ export default {
           range: [0, 10],
           title: 'nomi pozzi',
           type: 'category',
-          rangeslider: {
-          },
+          rangeslider: {},
           base: 0,
         },
         yaxis: {

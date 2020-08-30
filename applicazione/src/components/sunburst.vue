@@ -12,7 +12,7 @@
                        slot-scope="{ nodes }"
                        :current="nodes.mouseOver"
                        :root="nodes.root"
-                       description="di tutti i pozzi" />
+                       description="di tutti i pozzi"/>
 
     <!-- Add bottom legend -->
     <breadcrumbTrail slot="legend"
@@ -40,9 +40,11 @@ import { colorSchemes } from 'vue-d3-sunburst/src/infra/colorSchemes';
 import 'vue-d3-sunburst/dist/vue-d3-sunburst.css';
 
 
-const colorSchemesNames = Object.keys(colorSchemes).map(key => ({
-  value: key,
-  text: colorSchemes[key].name }));
+const colorSchemesNames = Object.keys(colorSchemes)
+  .map(key => ({
+    value: key,
+    text: colorSchemes[key].name
+  }));
 
 export default {
   props: {

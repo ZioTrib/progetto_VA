@@ -15,26 +15,26 @@
       <div>
         <b-row class="text-center">
           <b-col cols="12" class="mt-2">
-          <!--POPOVERS BUTTON-->
-          <b-button pill size="sm" variant="warning" class="px-1"
-                    @click="nascondi = !nascondi">
-            <b-icon icon="info-circle-fill"></b-icon>
-            {{ nascondi ? 'Mostra' : 'Nascondi' }} informazioni
-          </b-button>
+            <!--POPOVERS BUTTON-->
+            <b-button pill size="sm" variant="warning" class="px-1"
+                      @click="nascondi = !nascondi">
+              <b-icon icon="info-circle-fill"></b-icon>
+              {{ nascondi ? 'Mostra' : 'Nascondi' }} informazioni
+            </b-button>
           </b-col>
         </b-row>
         <b-row>
           <b-col cols="7">
             <!--POPOVERS-->
-            <b-popover  title="SEZIONE ELENCO POZZI" triggers="hover" variant="warning"
-                        placement="right"
-                        target="popoverElencoPozzi"
-                        :disabled.sync="nascondi">
+            <b-popover title="SEZIONE ELENCO POZZI" triggers="hover" variant="warning"
+                       placement="right"
+                       target="popoverElencoPozzi"
+                       :disabled.sync="nascondi">
               Nella sezione <strong>"Elenco Pozzi"</strong> è possibile <strong>consultare</strong>
               l'elenco delle risorse geotermiche e <strong>selezionare</strong> quelle
               da voler analizzare. È possibile <strong>filtrare</strong> l'elenco per
               <strong>regione, profondità massima</strong> e <strong>quota massima</strong>.
-              Inoltre è prensente una funzione di <strong>ricerca</strong>  per ogni
+              Inoltre è prensente una funzione di <strong>ricerca</strong> per ogni
               colonna.
 
             </b-popover>
@@ -50,11 +50,11 @@
               dati relativi alle <strong>temperature</strong> e alla
               <strong>litostratigrafia</strong>.
             </b-popover>
-            <b-popover  title="SEZIONE PROFONDITÀ E QUOTA" triggers="hover"
-                        variant="warning"
-                        placement="right"
-                        target="popoverProfQuot"
-                        :disabled.sync="nascondi">
+            <b-popover title="SEZIONE PROFONDITÀ E QUOTA" triggers="hover"
+                       variant="warning"
+                       placement="right"
+                       target="popoverProfQuot"
+                       :disabled.sync="nascondi">
               Nella sezione <strong>"Profondità | Quota"</strong> è possibile consultare le
               <strong>profondità</strong> e le <strong>quote</strong> delle risorse geotermiche
               selezionate.
@@ -64,38 +64,38 @@
               dati relativi alle <strong>temperature</strong> e alla
               <strong>litostratigrafia</strong>.
             </b-popover>
-            <b-popover  title="SEZIONE TEMPERATURA" triggers="hover" variant="warning"
-                        placement="left"
-                        target="popoverTemp"
-                        :disabled.sync="nascondi">
+            <b-popover title="SEZIONE TEMPERATURA" triggers="hover" variant="warning"
+                       placement="left"
+                       target="popoverTemp"
+                       :disabled.sync="nascondi">
               Nella sezione <strong>"Temperatura"</strong> è possibile <strong>visualizzare le
               varie misurazioni di temperatura </strong> (in gradi Celsius) delle
               risorge geotermiche a differenti livelli di profondità.
-              È possibile <strong>selezionare</strong>  la risorsa geotermica tra quelle
+              È possibile <strong>selezionare</strong> la risorsa geotermica tra quelle
               selezionate nella sezione "Elenco Pozzi" per la visualizzazione delle temperature.
             </b-popover>
             <b-popover title="SEZIONE LITOSTRATIGRAFIA" triggers="hover" variant="warning"
                        placement="left"
-                        target="popoverLito"
-                        :disabled.sync="nascondi">
+                       target="popoverLito"
+                       :disabled.sync="nascondi">
               Nella sezione <strong>"Litostratigrafia"</strong> è possibile <strong>gli strati
               litologici</strong> che compongono le risorse geotermiche.
-              È possibile <strong>selezionare</strong>  la risorsa geotermica tra quelle
+              È possibile <strong>selezionare</strong> la risorsa geotermica tra quelle
               selezionate nella sezione "Elenco Pozzi" per la visualizzazione
               della litostratigrafia.
             </b-popover>
-            <b-popover  title="SEZIONE PARALLEL COORDINATE" triggers="hover" variant="warning"
-                        placement="top"
-                        target="popoverParallel"
-                        :disabled.sync="nascondi">
+            <b-popover title="SEZIONE PARALLEL COORDINATE" triggers="hover" variant="warning"
+                       placement="top"
+                       target="popoverParallel"
+                       :disabled.sync="nascondi">
               Nella sezione <strong>"Parallel Coordinate"</strong> vengono visualizzate le frequenze
               con cui gli attributi <strong>"tipo", "uso", "scopo", "esito", "stato"</strong>
               si presentano per i pozzi selezionati nella sezione "Elenco Pozzi".
             </b-popover>
             <b-popover title="SEZIONE SUNBURST" triggers="hover" variant="warning"
                        placement="top"
-                        target="popoverSunburst"
-                        :disabled.sync="nascondi">
+                       target="popoverSunburst"
+                       :disabled.sync="nascondi">
               Nella sezione <strong>"Sunburst"</strong> è possibile visualizzare come si
               distribuiscono tutte le risorge geotermiche secondo la
               <strong>gerarchia "scopo" -> "uso" -> "stato"</strong>.
@@ -108,10 +108,10 @@
 
                 <b-tab active>
                   <template v-slot:title>
-                      <b-icon icon="table"></b-icon>
-                      ELENCO POZZI
+                    <b-icon icon="table"></b-icon>
+                    ELENCO POZZI
                   </template>
-                  <b-card  id="popoverElencoPozzi" bg-variant="light">
+                  <b-card id="popoverElencoPozzi" bg-variant="light">
                     <!--COUNTERS-->
                     <b-collapse id="collapse-counters" visible class="mt-2">
                       <b-row>
@@ -289,11 +289,11 @@
                     <b-icon icon="arrow-down-up"></b-icon>
                     PROFONDITÀ | QUOTA
                   </template>
-                  <b-card  id="popoverProfQuot" bg-variant="light" class="text-center">
+                  <b-card id="popoverProfQuot" bg-variant="light" class="text-center">
                     <b-col cols="12">
                       <div style="margin:0 auto;">
-                      <chart :Aggregation="chart.profalt"
-                             v-on:charttoDashboard="onchartclick"></chart>
+                        <chart :Aggregation="chart.profalt"
+                               v-on:charttoDashboard="onchartclick"></chart>
                       </div>
                     </b-col>
                   </b-card>
@@ -600,7 +600,10 @@ export default {
         // CROSSFILTER GROUPING AND FILTERING
         cf = crossfilter(this.reports);
         dregione = cf.dimension(d => d.regione);
-        this.regione.options = ['TUTTA L\'ITALIA'].concat(dregione.group().reduceCount().all().map(v => v.key));
+        this.regione.options = ['TUTTA L\'ITALIA'].concat(dregione.group()
+          .reduceCount()
+          .all()
+          .map(v => v.key));
         this.regione.selected = this.regione.options[0];
         this.selettore.options = ['PROFONDITÀ | QUOTA', 'LOCALIZZAZIONE', 'PROPRIETARIO', 'CONDIZIONI'];
         this.selettore.selected = this.selettore.options[0];
@@ -912,6 +915,7 @@ export default {
     transform: rotate(360deg);
   }
 }
+
 .tabella {
   height: 400px;
   overflow: scroll;

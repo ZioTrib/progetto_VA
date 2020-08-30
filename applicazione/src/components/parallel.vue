@@ -17,16 +17,26 @@ export default {
     const trace1 = {
       type: 'parcats',
       dimensions: [
-        { label: 'TIPO',
-          values: [] },
-        { label: 'USO',
-          values: [] },
-        { label: 'SCOPO',
-          values: [] },
-        { label: 'ESITO',
-          values: [] },
-        { label: 'STATO',
-          values: [] },
+        {
+          label: 'TIPO',
+          values: []
+        },
+        {
+          label: 'USO',
+          values: []
+        },
+        {
+          label: 'SCOPO',
+          values: []
+        },
+        {
+          label: 'ESITO',
+          values: []
+        },
+        {
+          label: 'STATO',
+          values: []
+        },
       ],
       bundlecolors: true,
       hoverinfo: 'count+probability',
