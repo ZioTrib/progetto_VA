@@ -485,13 +485,13 @@ export default {
             sortable: true,
           },
           {
-            key: 'scopo',
-            label: 'Scopo',
+            key: 'uso',
+            label: 'Uso',
             sortable: true,
           },
           {
-            key: 'uso',
-            label: 'Uso',
+            key: 'scopo',
+            label: 'Scopo',
             sortable: true,
           },
           {
