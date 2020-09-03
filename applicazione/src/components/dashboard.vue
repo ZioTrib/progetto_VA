@@ -457,7 +457,6 @@ export default {
       // START TABLE DATA
       tabella: {
         selectMode: 'multi',
-        modes: ['multi', 'single'],
         rowSelected: [],
         fields: [
           {
