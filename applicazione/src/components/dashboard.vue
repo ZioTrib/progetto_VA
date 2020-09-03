@@ -78,17 +78,18 @@
                        placement="left"
                        target="popoverLito"
                        :disabled.sync="nascondi">
-              Nella sezione <strong>"Litostratigrafia"</strong> è possibile <strong>gli strati
+              Nella sezione <strong>"Litostratigrafia"</strong> è possibile visualizzare
+              <strong>gli strati
               litologici</strong> che compongono le risorse geotermiche.
               È possibile <strong>selezionare</strong> la risorsa geotermica tra quelle
               selezionate nella sezione "Elenco Pozzi" per la visualizzazione
               della litostratigrafia.
             </b-popover>
-            <b-popover title="SEZIONE PARALLEL COORDINATE" triggers="hover" variant="warning"
+            <b-popover title="SEZIONE ALLUVIAL DIAGRAM" triggers="hover" variant="warning"
                        placement="top"
                        target="popoverParallel"
                        :disabled.sync="nascondi">
-              Nella sezione <strong>"Parallel Coordinate"</strong> vengono visualizzate le frequenze
+              Nella sezione <strong>"Alluvial Diagram"</strong> vengono visualizzate le frequenze
               con cui gli attributi <strong>"tipo", "uso", "scopo", "esito", "stato"</strong>
               si presentano per i pozzi selezionati nella sezione "Elenco Pozzi".
             </b-popover>
@@ -365,7 +366,7 @@
                 <b-tab active>
                   <template v-slot:title>
                     <b-icon icon="bezier2"></b-icon>
-                    PARALLEL COORDINATE
+                    ALLUVIAL DIAGRAM
                   </template>
                   <b-card id="popoverParallel" bg-variant="light" style="height: 600px">
                     <parallel :datiparallel="datiparallel"></parallel>
